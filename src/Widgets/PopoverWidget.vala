@@ -91,20 +91,12 @@ namespace WingpanelAirPods {
             */
             settings_button.clicked.connect (open_settings);
 
-            var title_label = new Gtk.Label ("Wingpanel AirPods");
-            title_label.halign = Gtk.Align.CENTER;
-            title_label.hexpand = true;
-            title_label.margin_start = 9;
-            title_label.get_style_context ().add_class (Granite.STYLE_CLASS_H3_LABEL);
-
             var airpods_name_label = new Gtk.Label (settings.get_string ("airpods-name"));
             airpods_name_label.halign = Gtk.Align.CENTER;
             airpods_name_label.hexpand = true;
             airpods_name_label.margin_start = 9;
             airpods_name_label.get_style_context ().add_class (Granite.STYLE_CLASS_PRIMARY_LABEL);
 
-            add (title_label);
-            add (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
             add (airpods_name_label);
             add (left_pod);
             update_left_pod_visibility ();
