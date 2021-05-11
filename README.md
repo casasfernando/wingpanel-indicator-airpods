@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="data/icons/128/com.github.casasfernando.wingpanel-indicator-airpods.svg" alt="Icon" />
+  <img src="data/icons/128/com.github.casasfernando.wingpanel-indicator-airpods.svg" alt="Wingpanel AirPods icon" />
 </p>
 <h1 align="center">Wingpanel AirPods</h1>
 
