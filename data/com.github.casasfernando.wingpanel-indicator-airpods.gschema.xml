@@ -1,0 +1,94 @@
+<schemalist>
+  <schema path="/com/github/casasfernando/wingpanel-indicator-airpods/" id="com.github.casasfernando.wingpanel-indicator-airpods" gettext-domain="wingpanel-indicator-airpods">
+    <key type="b" name="display-indicator">
+      <default>true</default>
+      <summary>Display indicator in Wingpanel</summary>
+      <description></description>
+    </key>
+    <key type="b" name="display-indicator-battery">
+      <default>false</default>
+      <summary>Display AirPods battery charge percentage in Wingpanel indicator</summary>
+      <description></description>
+    </key>
+    <key type="b" name="display-indicator-connected-only">
+      <default>false</default>
+      <summary>Display indicator in Wingpanel only when the AirPods are connected</summary>
+      <description></description>
+    </key>
+    <key type="b" name="display-indicator-effective">
+      <default>true</default>
+      <summary>Display indicator in Wingpanel (effective setting)</summary>
+      <description></description>
+    </key>
+    <key type="b" name="display-notifications">
+      <default>true</default>
+      <summary>Enable indicator notifications</summary>
+      <description></description>
+    </key>
+    <key type="b" name="airpods-connected">
+      <default>false</default>
+      <summary>AirPods connection status</summary>
+      <description></description>
+    </key>
+    <key type="s" name="airpods-bt-adapter">
+      <default>""</default>
+      <summary>Bluetooth adapter that the AirPods are paired with</summary>
+      <description></description>
+    </key>
+    <key type="s" name="airpods-mac-addr">
+      <default>""</default>
+      <summary>AirPods bluetooth public MAC address</summary>
+      <description></description>
+    </key>
+    <key type="s" name="airpods-name">
+      <default>""</default>
+      <summary>AirPods name</summary>
+      <description></description>
+    </key>
+    <key type="x" name="airpods-status-batt-l">
+      <default>15</default>
+      <summary>AirPods battery status (left)</summary>
+      <description></description>
+    </key>
+    <key type="x" name="airpods-status-batt-r">
+      <default>15</default>
+      <summary>AirPods battery status (right)</summary>
+      <description></description>
+    </key>
+    <key type="x" name="airpods-status-batt-case">
+      <default>15</default>
+      <summary>AirPods battery status (case)</summary>
+      <description></description>
+    </key>
+    <key type="b" name="airpods-status-charging-l">
+      <default>false</default>
+      <summary>AirPods battery charging status (left)</summary>
+      <description></description>
+    </key>
+    <key type="b" name="airpods-status-charging-r">
+      <default>false</default>
+      <summary>AirPods battery charging status (right)</summary>
+      <description></description>
+    </key>
+    <key type="b" name="airpods-status-charging-case">
+      <default>false</default>
+      <summary>AirPods battery charging status (case)</summary>
+      <description></description>
+    </key>
+    <key type="b" name="airpods-status-inear-l">
+      <default>false</default>
+      <summary>AirPods "in ear" status (left)</summary>
+      <description></description>
+    </key>
+    <key type="b" name="airpods-status-inear-r">
+      <default>false</default>
+      <summary>AirPods "in ear" status (right)</summary>
+      <description></description>
+    </key>
+    <key type="s" name="airpods-status-model">
+      <default>"airpods12"</default>
+      <summary>AirPods model</summary>
+      <description></description>
+    </key>
+  </schema>
+</schemalist>

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Wingpanel AirPods
+GenericName=Wingpanel AirPods
+Comment=Display Apple's AirPods status information in elementary OS Wingpanel
+Categories=Utility;
+Exec=com.github.casasfernando.wingpanel-indicator-airpods
+Icon=com.github.casasfernando.wingpanel-indicator-airpods
+Terminal=false
+Type=Application
+X-GNOME-Gettext-Domain=com.github.casasfernando.wingpanel-indicator-airpods
+Keywords=Utility;
+X-GNOME-UsesNotifications=true

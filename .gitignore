@@ -1,0 +1,8 @@
+*~
+build/
+debian/.debhelper/
+debian/com.github.casasfernando.wingpanel-indicator-airpods/
+debian/debhelper-build-stamp
+debian/files
+debian/wingpanel-indicator-airpods.substvars
+debian/wingpanel-indicator-airpods/

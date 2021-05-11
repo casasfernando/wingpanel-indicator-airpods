@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 135.46666 135.46667"
+   version="1.1"
+   id="svg841"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="airpods-connected-symbolic.svg">
+  <title
+     id="title1404">AirPods - Connected</title>
+  <defs
+     id="defs835" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.0797765"
+     inkscape:cx="237.77636"
+     inkscape:cy="243.8799"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1254"
+     inkscape:window-height="801"
+     inkscape:window-x="666"
+     inkscape:window-y="133"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata838">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>AirPods - Connected</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Fernando Casas Schössow</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Fernando Casas Schössow</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:date>07/05/2021</dc:date>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g866">
+      <path
+         id="rect1424"
+         style="fill:#666666;fill-opacity:1;fill-rule:evenodd;stroke-width:0.301257"
+         d="M 79.60908,54.331494 V 111.57038 H 97.684518 V 62.510748 A 30.125729,27.113158 0 0 1 81.573136,54.331494 Z" />
+      <path
+         id="rect1426"
+         style="fill:#666666;fill-opacity:1;fill-rule:evenodd;stroke-width:0.301257"
+         d="m 79.614376,117.5873 v 6.02513 c -0.003,3.31076 2.714388,6.03344 6.025146,6.03339 l 6.025145,-1.1e-4 c 3.310758,-5e-5 6.025147,-2.72252 6.025147,-6.03328 v -6.02513 z" />
+      <path
+         id="path1428-3"
+         style="fill:#666666;fill-opacity:1;stroke-width:2.79289;stroke-linecap:round;stroke-linejoin:round"
+         d="M 103.66401,5.8208333 A 30.125728,27.113158 0 0 0 73.589355,32.933907 30.125728,27.113158 0 0 0 103.71465,60.04698 30.125728,27.113158 0 0 0 127.52922,49.539096 V 16.328719 a 30.125728,27.113158 0 0 0 -23.81457,-10.5078857 30.125728,27.113158 0 0 0 -0.0506,0 z M 117.27145,20.88348 c 2.50344,0 4.5191,2.015655 4.5191,4.519104 v 15.062645 c 0,2.50345 -2.01566,4.519104 -4.5191,4.519104 -2.50345,0 -4.51859,-2.015654 -4.51859,-4.519104 V 25.402584 c 0,-2.503449 2.01514,-4.519105 4.51859,-4.519104 z m -25.606714,9.037691 h 6.024956 c 1.668966,0 3.012738,1.343771 3.012738,3.012736 0,1.668965 -1.343772,3.012736 -3.012738,3.012736 h -6.024956 c -1.668966,0 -3.012737,-1.343771 -3.012737,-3.012736 0,-1.668965 1.343771,-3.012736 3.012737,-3.012736 z" />
+      <path
+         id="rect1424-9"
+         style="fill:#666666;fill-opacity:1;fill-rule:evenodd;stroke-width:0.301257"
+         d="M 55.857633,54.331513 V 111.5704 H 37.782195 V 62.510767 a 30.125729,27.113158 0 0 0 16.111382,-8.179254 z" />
+      <path
+         id="rect1426-1"
+         style="fill:#666666;fill-opacity:1;fill-rule:evenodd;stroke-width:0.301257"
+         d="m 55.852338,117.58732 v 6.02513 c 0.003,3.31076 -2.714389,6.03344 -6.025147,6.03339 l -6.025145,-1.1e-4 c -3.310758,-5e-5 -6.025147,-2.72252 -6.025147,-6.03328 v -6.02513 z" />
+      <path
+         id="path1428-3-2"
+         style="fill:#666666;fill-opacity:1;stroke-width:2.79289;stroke-linecap:round;stroke-linejoin:round"
+         d="M 31.752068,5.8208333 A 30.125728,27.113158 0 0 0 7.9374999,16.328719 V 49.539096 A 30.125728,27.113158 0 0 0 31.752068,60.04698 30.125728,27.113158 0 0 0 61.877359,32.933907 30.125728,27.113158 0 0 0 31.802709,5.8208333 a 30.125728,27.113158 0 0 0 -0.05064,0 z M 18.195272,20.88348 c 2.503448,0 4.518588,2.015655 4.518587,4.519104 v 15.062645 c 0,2.50345 -2.015139,4.519104 -4.518587,4.519104 -2.503448,0 -4.519104,-2.015654 -4.519104,-4.519104 V 25.402584 c 0,-2.503449 2.015656,-4.519104 4.519104,-4.519104 z m 19.58175,9.038206 h 6.024956 c 1.668965,0 3.012737,1.343256 3.012737,3.012221 0,1.668965 -1.343772,3.012736 -3.012737,3.012736 h -6.024956 c -1.668966,0 -3.012737,-1.343771 -3.012737,-3.012736 0,-1.668965 1.343771,-3.012221 3.012737,-3.012221 z" />
+    </g>
+  </g>
+</svg>

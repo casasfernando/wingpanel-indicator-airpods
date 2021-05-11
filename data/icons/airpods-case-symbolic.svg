@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="512"
+   height="512"
+   viewBox="0 0 135.46666 135.46667"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="airpods-case-symbolic.svg">
+  <title
+     id="title859">AirPods Case</title>
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.87705101"
+     inkscape:cx="282.49355"
+     inkscape:cy="161.5496"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     showguides="true"
+     inkscape:window-width="1254"
+     inkscape:window-height="801"
+     inkscape:window-x="144"
+     inkscape:window-y="68"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>AirPods Case</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-nc-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Fernando Casas Schössow</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Fernando Casas Schössow</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:date>07/05/2021</dc:date>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:prohibits
+           rdf:resource="http://creativecommons.org/ns#CommercialUse" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g849">
+      <path
+         id="rect837"
+         style="fill:#eeeeee;fill-opacity:1;fill-rule:evenodd;stroke-width:1.74386;stroke-miterlimit:4;stroke-dasharray:none"
+         d="M 178.00586 22 C 110.09999 22 55.430888 76.667153 55.427734 144.57227 L 133.42773 144.57227 C 133.43406 132.22429 143.37706 122.28516 155.72656 122.28516 L 356.27344 122.28516 C 368.62294 122.28516 378.56594 132.22429 378.57227 144.57227 L 456.57227 144.57227 C 456.56911 76.667153 401.90001 22 333.99414 22 L 178.00586 22 z M 55.427734 166.85742 L 55.427734 367.42188 C 55.427734 435.32968 110.09803 490 178.00586 490 L 333.99414 490 C 401.90197 490 456.57227 435.32968 456.57227 367.42188 L 456.57227 166.85742 L 378.57227 166.85742 C 378.56489 179.20448 368.62229 189.14258 356.27344 189.14258 L 155.72656 189.14258 C 143.37771 189.14258 133.43511 179.20448 133.42773 166.85742 L 55.427734 166.85742 z M 255.86914 234.14258 A 21.858189 21.858189 0 0 1 256 234.14258 A 21.858189 21.858189 0 0 1 277.85742 256 A 21.858189 21.858189 0 0 1 256 277.85742 A 21.858189 21.858189 0 0 1 234.14258 256 A 21.858189 21.858189 0 0 1 255.86914 234.14258 z "
+         transform="scale(0.26458333)" />
+    </g>
+  </g>
+</svg>
