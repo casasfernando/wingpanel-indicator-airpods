@@ -1,3 +1,14 @@
+wingpanel-indicator-airpods (0.2.0) bionic; urgency=medium
+
+  * Optimized AirPods beacon processing conditions
+  * Added support for continuous AirPods beacon scan and a battery saver mode setting to preserve battery life when the system is running on battery
+  * Fixed bug related to widget visibility in the popover
+  * Minor UI changes
+  * Updated README file
+  * Fixed screenshots links in appdata xml file
+
+ -- Fernando Casas Schössow <casasfernando@outlook.com>  Tue, 22 May 2021 22:28:00 +0200
+
 wingpanel-indicator-airpods (0.1.0) bionic; urgency=medium
 
   * Initial release
