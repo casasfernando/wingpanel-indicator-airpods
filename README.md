@@ -19,11 +19,14 @@ Being this one of my first Vala applications I'm sure that the code can be impro
 - Displays AirPods battery charge percentage in the indicator
 - Displays battery charge status per AirPod and also for the charging case in the popover
 - Notifys the user when the AirPods battery is running low
+- Supports battery saver mode to preserve battery life while the system is running on battery (ie: laptops) *
+
+* In order to preserve system battery life some indicator features will be disabled and AirPods battery level report may be less accurate
 
 ### Requirements
 
 - elementary OS 5.1.7 Hera
-- Bluetooth 4.0 controller with BLE support
+- Bluetooth 4.0 adapter with BLE support
 
 ## Screenshots
 
