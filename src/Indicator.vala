@@ -264,8 +264,8 @@ namespace WingpanelAirPods {
                             } else {
                                 debug ("wingpanel-indicator-airpods: no paired AirPods detected");
                             }
-                        // Otherwise if the interface address type is random and contains manufacturer data process it as a BLE beacon
-                        } else if (addr_type == "random" && has_man_data) {
+                        // Otherwise if the interface address type is random, contains manufacturer data and AirPods are connected; process it as a BLE beacon
+                        } else if (addr_type == "random" && has_man_data && settings.get_boolean ("airpods-connected")) {
                             debug ("wingpanel-indicator-airpods: new BLE beacon detected and contains Manufacturer Data");
                             AirPodsService.airpods_beacon_analyzer (objpath, iface);
                         }
