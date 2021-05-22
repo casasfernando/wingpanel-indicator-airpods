@@ -162,7 +162,7 @@ namespace WingpanelAirPods {
         }
 
         public void update_left_pod_visibility () {
-            if (settings.get_int64 ("airpods-status-batt-l") != 15) {
+            if (settings.get_boolean ("airpods-connected") && settings.get_int64 ("airpods-status-batt-l") != 15) {
                 set_widget_visible (left_pod, true);
             } else {
                 set_widget_visible (left_pod, false);
@@ -170,7 +170,7 @@ namespace WingpanelAirPods {
         }
 
         public void update_right_pod_visibility () {
-            if (settings.get_int64 ("airpods-status-batt-r") != 15) {
+            if (settings.get_boolean ("airpods-connected") && settings.get_int64 ("airpods-status-batt-r") != 15) {
                 set_widget_visible (right_pod, true);
             } else {
                 set_widget_visible (right_pod, false);
@@ -178,7 +178,7 @@ namespace WingpanelAirPods {
         }
 
         public void update_pods_case_visibility () {
-            if (settings.get_int64 ("airpods-status-batt-case") != 15) {
+            if (settings.get_boolean ("airpods-connected") && settings.get_int64 ("airpods-status-batt-case") != 15) {
                 set_widget_visible (pods_case, true);
             } else {
                 set_widget_visible (pods_case, false);
@@ -186,7 +186,7 @@ namespace WingpanelAirPods {
         }
 
         public void update_airpods_disconnected_visibility () {
-            if (settings.get_int64 ("airpods-status-batt-l") == 15 && settings.get_int64 ("airpods-status-batt-r") == 15 && settings.get_int64 ("airpods-status-batt-case") == 15) {
+            if (!settings.get_boolean ("airpods-connected") {
                 set_widget_visible (airpods_disconnected, true);
             } else {
                 set_widget_visible (airpods_disconnected, false);
