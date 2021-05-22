@@ -24,6 +24,7 @@ namespace WingpanelAirPods {
         private Wingpanel.Widgets.Switch indicator;
         private Wingpanel.Widgets.Switch indicator_connected_only;
         private Wingpanel.Widgets.Switch indicator_notifications;
+        private Wingpanel.Widgets.Switch battery_saver_mode;
 
         public unowned Settings settings { get; construct set; }
 
@@ -46,9 +47,15 @@ namespace WingpanelAirPods {
             indicator_notifications = new Wingpanel.Widgets.Switch ("Show notifications", settings.get_boolean ("display-notifications"));
             settings.bind ("display-notifications", indicator_notifications.get_switch (), "active", SettingsBindFlags.DEFAULT);
 
+            // Enable battery saver mode
+            battery_saver_mode = new Wingpanel.Widgets.Switch ("Enable battery saver mode", settings.get_boolean ("battery-saver-mode"));
+            settings.bind ("battery-saver-mode", battery_saver_mode.get_switch (), "active", SettingsBindFlags.DEFAULT);
+
             add (indicator);
             add (indicator_connected_only);
             add (indicator_notifications);
+            add (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
+            add (battery_saver_mode);
 
         }
 

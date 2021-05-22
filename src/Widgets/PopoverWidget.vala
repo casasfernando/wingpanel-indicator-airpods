@@ -31,6 +31,11 @@ namespace WingpanelAirPods {
         private Gtk.Label airpods_disconnected_text_label;
         private Gtk.Label airpods_disconnected_value_label;
 
+        private Gtk.Grid batt_saver_warn;
+        private Gtk.Image batt_saver_warn_icon;
+        private Gtk.Label batt_saver_warn_label;
+        private Gtk.Separator batt_saver_warn_separator;
+
         private Wingpanel.Widgets.Switch indicator_battery;
 
         public unowned Settings settings { get; construct set; }
@@ -77,6 +82,32 @@ namespace WingpanelAirPods {
             // Add value label
             airpods_disconnected.attach (airpods_disconnected_value_label, 1, 1);
 
+            // Battery saver mode warning
+            batt_saver_warn = new Gtk.Grid ();
+            batt_saver_warn.hexpand = true;
+            batt_saver_warn.margin_start = 6;
+            batt_saver_warn.margin_top = 6;
+            batt_saver_warn.margin_end = 12;
+            batt_saver_warn.margin_bottom = 6;
+            batt_saver_warn.column_spacing = 3;
+            batt_saver_warn.set_tooltip_text ("In order to preserve system battery life some indicator features are disabled and AirPods battery level report may be less accurate.");
+
+            batt_saver_warn_icon = new Gtk.Image.from_icon_name ("dialog-warning-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
+            batt_saver_warn_icon.pixel_size = 16;
+            batt_saver_warn_icon.margin_end = 3;
+
+            batt_saver_warn_label = new Gtk.Label ("Battery saver mode engaged");
+            batt_saver_warn_label.halign = Gtk.Align.START;
+            batt_saver_warn_label.hexpand = true;
+            batt_saver_warn_label.margin_start = 3;
+
+            batt_saver_warn_separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
+
+            // Add element icon
+            batt_saver_warn.attach (batt_saver_warn_icon, 0, 0, 1, 1);
+            // Add text label
+            batt_saver_warn.attach (batt_saver_warn_label, 1, 0, 1, 1);
+
             // Enable indicator battery information switch
             indicator_battery = new Wingpanel.Widgets.Switch ("Show percentage", settings.get_boolean ("display-indicator-battery"));
             settings.bind ("display-indicator-battery", indicator_battery.get_switch (), "active", SettingsBindFlags.DEFAULT);
@@ -107,6 +138,9 @@ namespace WingpanelAirPods {
             add (airpods_disconnected);
             update_airpods_disconnected_visibility ();
             add (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
+            add (batt_saver_warn);
+            add (batt_saver_warn_separator);
+            update_batt_warn_visibility ();
             add (indicator_battery);
             add (settings_button);
         }
@@ -156,6 +190,16 @@ namespace WingpanelAirPods {
                 set_widget_visible (airpods_disconnected, true);
             } else {
                 set_widget_visible (airpods_disconnected, false);
+            }
+        }
+
+        public void update_batt_warn_visibility () {
+            if (settings.get_boolean ("battery-saver-mode") && settings.get_boolean ("system-on-battery")) {
+                set_widget_visible (batt_saver_warn, true);
+                set_widget_visible (batt_saver_warn_separator, true);
+            } else {
+                set_widget_visible (batt_saver_warn, false);
+                set_widget_visible (batt_saver_warn_separator, false);
             }
         }
 

@@ -1,5 +1,10 @@
 <schemalist>
   <schema path="/com/github/casasfernando/wingpanel-indicator-airpods/" id="com.github.casasfernando.wingpanel-indicator-airpods" gettext-domain="wingpanel-indicator-airpods">
+    <key type="b" name="battery-saver-mode">
+      <default>true</default>
+      <summary>Enable battery saver mode</summary>
+      <description></description>
+    </key>
     <key type="b" name="display-indicator">
       <default>true</default>
       <summary>Display indicator in Wingpanel</summary>
@@ -88,6 +93,11 @@
     <key type="s" name="airpods-status-model">
       <default>"airpods12"</default>
       <summary>AirPods model</summary>
+      <description></description>
+    </key>
+    <key type="b" name="system-on-battery">
+      <default>false</default>
+      <summary>System running on battery</summary>
       <description></description>
     </key>
   </schema>

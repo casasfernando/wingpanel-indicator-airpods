@@ -47,7 +47,6 @@ namespace WingpanelAirPods {
         }
 
         public static void airpods_status_init () {
-            settings.set_boolean ("airpods-connected", false);
             settings.set_int64 ("airpods-status-batt-l", 15);
             settings.set_int64 ("airpods-status-batt-r", 15);
             settings.set_int64 ("airpods-status-batt-case", 15);
@@ -244,9 +243,11 @@ namespace WingpanelAirPods {
 
             debug ("wingpanel-indicator-airpods: Starting AirPods beacon discovery");
             airpods_adpt.start_discovery.begin ();
-            yield airpods_beacon_discovery_timeout (15);
-            airpods_beacon_discovery_stop ();
-            strongest_rssi = -60;
+            // If the system is running on battery stop beacons discovery after 15 seconds to try to save battery
+            if (settings.get_boolean ("battery-saver-mode") && settings.get_boolean ("system-on-battery")) {
+                yield airpods_beacon_discovery_timeout (15);
+                airpods_beacon_discovery_stop ();
+            }
         }
 
         public static void airpods_beacon_discovery_stop () {
@@ -259,6 +260,7 @@ namespace WingpanelAirPods {
             }
             debug ("wingpanel-indicator-airpods: Stopping AirPods beacon discovery");
             airpods_adpt.stop_discovery.begin ();
+            strongest_rssi = -75;
         }
 
         public static void airpods_interface_remove (ObjectPath iface) {

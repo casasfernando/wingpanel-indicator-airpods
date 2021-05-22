@@ -27,9 +27,11 @@ namespace WingpanelAirPods {
         private PopoverWidget popover_widget;
         private WingpanelAirPods.DBusProperties airpods_conn_mon = null;
         private WingpanelAirPods.DBusObjectManager airpods_beacon_mon = null;
+        private WingpanelAirPods.DBusProperties on_batt_mon = null;
         private int64 prev_status_batt_l = 15;
         private int64 prev_status_batt_r = 15;
         private int64 prev_status_batt_case = 15;
+        private uint airpods_beacon_discovery_timeout = 0;
 
         private static GLib.Settings settings;
 
@@ -70,6 +72,8 @@ namespace WingpanelAirPods {
             if (display_widget == null) {
                 display_widget = new DisplayWidget (settings);
                 update_display_widget_data ();
+                // Initialize system power source monitor
+                on_battery_monitor ();
                 // Initialize AirPodsService
                 AirPodsService.init ();
                 // Check if paired AirPods were detected
@@ -122,6 +126,7 @@ namespace WingpanelAirPods {
             popover_widget.update_right_pod (batt_icn (airpods_status_batt_r, settings.get_boolean ("airpods-status-charging-r")), batt_val (airpods_status_batt_r));
             popover_widget.update_pods_case (batt_icn (airpods_status_batt_case, settings.get_boolean ("airpods-status-charging-case")), batt_val (airpods_status_batt_case));
             popover_widget.update_airpods_disconnected_visibility ();
+            popover_widget.update_batt_warn_visibility ();
 
             settings.changed["airpods-status-batt-l"].connect ( () =>{
                 popover_widget.update_left_pod_visibility ();
@@ -169,31 +174,24 @@ namespace WingpanelAirPods {
                 }
             });
 
-            uint airpods_beacon_discovery_timeout = 0;
             // Enable/Disable AirPods beacon discovery on AirPods connection/disconnection
             settings.changed["airpods-connected"].connect ( () =>{
-                if (settings.get_boolean ("airpods-connected") && airpods_beacon_discovery_timeout == 0) {
+                if (settings.get_boolean ("airpods-connected")) {
                     if (settings.get_boolean ("display-indicator")) {
                         settings.set_boolean ("display-indicator-effective", true);
                     }
-                    // Set the timer to automatically discover AirPods beacon
-                    debug ("wingpanel-indicator-airpods: enabling automatic AirPods beacon discovery");
-                    airpods_beacon_discovery_timeout = Timeout.add_seconds (60, () => {
-                        AirPodsService.airpods_beacon_discovery_start.begin ();
-                        return true;
-                    });
                     debug ("wingpanel-indicator-airpods: AirPods connected. Starting AirPods beacon discovery.");
                     AirPodsService.airpods_beacon_discovery_start.begin ();
                 } else {
-                    if (!settings.get_boolean ("airpods-connected") && airpods_beacon_discovery_timeout != 0) {
-                        debug ("wingpanel-indicator-airpods: AirPods disconnected. Disabling automatic AirPods beacon discovery");
+                    debug ("wingpanel-indicator-airpods: AirPods disconnected. Stopping automatic AirPods beacon discovery");
+                    if (airpods_beacon_discovery_timeout != 0) {
                         GLib.Source.remove (airpods_beacon_discovery_timeout);
                         airpods_beacon_discovery_timeout = 0;
-                        AirPodsService.airpods_beacon_discovery_stop ();
-                        AirPodsService.airpods_status_init ();
-                        if (settings.get_boolean ("display-indicator-connected-only")) {
-                            settings.set_boolean ("display-indicator-effective", false);
-                        }
+                    }
+                    AirPodsService.airpods_beacon_discovery_stop ();
+                    AirPodsService.airpods_status_init ();
+                    if (settings.get_boolean ("display-indicator-connected-only")) {
+                        settings.set_boolean ("display-indicator-effective", false);
                     }
                 }
             });
@@ -213,6 +211,21 @@ namespace WingpanelAirPods {
                     settings.set_boolean ("display-indicator-effective", settings.get_boolean ("display-indicator"));
                 }
             });
+
+            // Reset beacon discovery mode on system power source change if the AirPods are connected
+            settings.changed["system-on-battery"].connect ( () =>{
+                if (settings.get_boolean ("airpods-connected")) {
+                    reset_beacon_discovery_mode ("system power source change");
+                }
+            });
+
+            // Reset beacon discovery mode on battery saver mode setting change if the AirPods are connected
+            settings.changed["battery-saver-mode"].connect ( () =>{
+                if (settings.get_boolean ("airpods-connected")) {
+                    reset_beacon_discovery_mode ("battery saver mode setting change");
+                }
+            });
+
 
         }
 
@@ -265,6 +278,67 @@ namespace WingpanelAirPods {
             });
         }
 
+        private void on_battery_monitor () {
+            // Check current system power source
+            debug ("wingpanel-indicator-airpods: connecting to D-Bus to check current system power source");
+            try {
+                WingpanelAirPods.UPower system_upower = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower", "/org/freedesktop/UPower");
+                debug ("wingpanel-indicator-airpods: connected to D-Bus. Checking current system power source");
+                bool on_batt = system_upower.on_battery;
+                if (on_batt) {
+                    debug ("wingpanel-indicator-airpods: system is running on battery");
+                    settings.set_boolean ("system-on-battery", true);
+                } else {
+                    debug ("wingpanel-indicator-airpods: system is not running on battery");
+                    settings.set_boolean ("system-on-battery", false);
+                }
+            } catch (IOError e) {
+                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to check current system power source (%s)", e.message);
+            }
+
+            // Monitor system power source changes
+            debug ("wingpanel-indicator-airpods: connecting to D-Bus to monitor system power source changes");
+            try {
+                on_batt_mon = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.DBus.Properties", "/org/freedesktop/UPower");
+            } catch (IOError e) {
+                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to monitor system power source changes (%s)", e.message);
+            }
+            debug ("wingpanel-indicator-airpods: connected to D-Bus. Monitoring system power source changes");
+
+            on_batt_mon.properties_changed.connect((inter, cp) => {
+                if (inter == "org.freedesktop.UPower" && cp.get ("OnBattery") != null) {
+                    debug ("wingpanel-indicator-airpods: system power source changed. Running on battery (%s)", cp.get ("OnBattery").get_boolean ().to_string());
+                    settings.set_boolean ("system-on-battery", cp.get ("OnBattery").get_boolean ());
+                }
+            });
+
+        }
+
+        private void reset_beacon_discovery_mode (string reason) {
+            if (settings.get_boolean ("battery-saver-mode") && settings.get_boolean ("system-on-battery")) {
+                debug ("wingpanel-indicator-airpods: stopping automatic AirPods beacon discovery due to ".concat (reason));
+                AirPodsService.airpods_beacon_discovery_stop ();
+                // Set the timer to automatically discover AirPods beacon every 60 seconds
+                debug ("wingpanel-indicator-airpods: starting automatic AirPods beacon discovery every 60 seconds (battery saver mode: on)");
+                airpods_beacon_discovery_timeout = Timeout.add_seconds (60, () => {
+                    AirPodsService.airpods_beacon_discovery_start.begin ();
+                    return true;
+                });
+                AirPodsService.airpods_beacon_discovery_start.begin ();
+                airpods_notify ("Battery saver mode engaged", "In order to preserve system battery life some indicator features will be disabled and AirPods battery level report may be less accurate.");
+            } else {
+                debug ("wingpanel-indicator-airpods: stopping automatic AirPods beacon discovery due to ".concat (reason));
+                AirPodsService.airpods_beacon_discovery_stop ();
+                if (airpods_beacon_discovery_timeout != 0) {
+                    GLib.Source.remove (airpods_beacon_discovery_timeout);
+                    airpods_beacon_discovery_timeout = 0;
+                }
+                debug ("wingpanel-indicator-airpods: starting automatic AirPods beacon discovery (battery saver mode: off)");
+                AirPodsService.airpods_beacon_discovery_start.begin ();
+                airpods_notify ("Battery saver mode disengaged", "Re-enabling all indicator features");
+            }
+        }
+
         private string batt_icn (int64 batt_lvl, bool batt_chrg) {
             string batt_icon = "";
             if (batt_lvl < 1) {
@@ -303,13 +377,13 @@ namespace WingpanelAirPods {
             } else {
                 nbody = element.concat (" battery level is low and it will need to be recharged soon.");
             }
-            airpods_notify (nbody);
+            airpods_notify ("Battery level alert", nbody);
             return;
         }
 
-        private void airpods_notify (string body) {
+        private void airpods_notify (string title, string body) {
             Notify.init ("com.github.casasfernando.wingpanel-indicator-airpods");
-            var notification = new Notify.Notification ("Battery level alert", body, "com.github.casasfernando.wingpanel-indicator-airpods");
+            var notification = new Notify.Notification (title, body, "com.github.casasfernando.wingpanel-indicator-airpods");
             notification.set_app_name ("Wingpanel AirPods");
             notification.set_hint ("desktop-entry", "com.github.casasfernando.wingpanel-indicator-airpods");
             notification.set_urgency (Notify.Urgency.LOW);
