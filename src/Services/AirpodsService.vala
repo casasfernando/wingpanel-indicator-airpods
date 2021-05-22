@@ -22,6 +22,8 @@
 namespace WingpanelAirPods {
     public class AirPodsService : GLib.Object {
 
+        private static string decoded_beacon = "";
+        private static string prev_decoded_beacon = "";
         private static int64 leftStatus = 15;
         private static int64 rightStatus = 15;
         private static int64 caseStatus = 15;
@@ -164,50 +166,54 @@ namespace WingpanelAirPods {
                     // and stronger than previous decoded beacons otherwise discard it
                     if (rssi > strongest_rssi) {
                         debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] strong AirPods beacon received. Decoding it.");
-                        // Update strongest beacon RSSI detected
-                        strongest_rssi = rssi;
                         // Prepare beacon data to be decoded
                         uint8[] iface_mandata_dataArr = (uint8[]) iface_mandata_data;
                         // Decode beacon data
-                        string decoded_beacon = decodeHex (iface_mandata_dataArr);
+                        decoded_beacon = decodeHex (iface_mandata_dataArr);
                         debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] decoded AirPods beacon = %s", decoded_beacon);
-                        bool flip = isFlipped (decoded_beacon);
-                        debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] isFlipped = %s", flip.to_string());
-                        // Left AirPod (0-10 batt; 15=disconnected)
-                        leftStatus = decoded_beacon.substring(flip ? 12 : 13, 1).to_int64 (null, 16);
-                        settings.set_int64 ("airpods-status-batt-l", leftStatus);
-                        debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] leftStatus = %s", leftStatus.to_string());
-                        // Right AirPod (0-10 batt; 15=disconnected)
-                        rightStatus = decoded_beacon.substring(flip ? 13 : 12, 1).to_int64 (null, 16);
-                        settings.set_int64 ("airpods-status-batt-r", rightStatus);
-                        debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] rightStatus = %s", rightStatus.to_string());
-                        // Case (0-10 batt; 15=disconnected)
-                        caseStatus = decoded_beacon.substring(15, 1).to_int64 (null, 16);
-                        settings.set_int64 ("airpods-status-batt-case", caseStatus);
-                        debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] caseStatus = %s", caseStatus.to_string());
-                        // Charge status (bit 0=left; bit 1=right; bit 2=case)
-                        int64 chargeStatus = decoded_beacon.substring(14, 1).to_int64 (null, 16);
-                        chargeL = (chargeStatus & (flip ? 0x2 : 0x1)) != 0;
-                        settings.set_boolean ("airpods-status-charging-l", chargeL);
-                        debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeL = %s", chargeL.to_string());
-                        chargeR = (chargeStatus & (flip ? 0x1 : 0x2)) != 0;
-                        settings.set_boolean ("airpods-status-charging-r", chargeR);
-                        debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeR = %s", chargeR.to_string());
-                        chargeCase = (chargeStatus & 0x4) != 0;
-                        settings.set_boolean ("airpods-status-charging-case", chargeCase);
-                        debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeCase = %s", chargeCase.to_string());
-                        // InEar status (bit 1=left; bit 3=right)
-                        int64 inEarStatus = decoded_beacon.substring(11, 1).to_int64 (null, 16);
-                        inEarL = (inEarStatus & (flip ? 0x8 : 0x2)) != 0;
-                        settings.set_boolean ("airpods-status-inear-l", inEarL);
-                        debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] inEarL = %s", inEarL.to_string());
-                        inEarR = (inEarStatus & (flip ? 0x2 : 0x8)) != 0;
-                        settings.set_boolean ("airpods-status-inear-r", inEarR);
-                        debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] inEarR = %s", inEarR.to_string());
-                        // Detect if these are AirPods Pro or regular ones
-                        model = (decoded_beacon.substring(7, 1) == "E") ? MODEL_AIRPODS_PRO : MODEL_AIRPODS_NORMAL;
-                        settings.set_string ("airpods-status-model", model);
-                        debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] model = %s", model);
+                        if (decoded_beacon != prev_decoded_beacon) {
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] BLE beacon contains new data");
+                            prev_decoded_beacon = decoded_beacon;
+                            bool flip = isFlipped (decoded_beacon);
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] isFlipped = %s", flip.to_string());
+                            // Left AirPod (0-10 batt; 15=disconnected)
+                            leftStatus = decoded_beacon.substring(flip ? 12 : 13, 1).to_int64 (null, 16);
+                            settings.set_int64 ("airpods-status-batt-l", leftStatus);
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] leftStatus = %s", leftStatus.to_string());
+                            // Right AirPod (0-10 batt; 15=disconnected)
+                            rightStatus = decoded_beacon.substring(flip ? 13 : 12, 1).to_int64 (null, 16);
+                            settings.set_int64 ("airpods-status-batt-r", rightStatus);
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] rightStatus = %s", rightStatus.to_string());
+                            // Case (0-10 batt; 15=disconnected)
+                            caseStatus = decoded_beacon.substring(15, 1).to_int64 (null, 16);
+                            settings.set_int64 ("airpods-status-batt-case", caseStatus);
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] caseStatus = %s", caseStatus.to_string());
+                            // Charge status (bit 0=left; bit 1=right; bit 2=case)
+                            int64 chargeStatus = decoded_beacon.substring(14, 1).to_int64 (null, 16);
+                            chargeL = (chargeStatus & (flip ? 0x2 : 0x1)) != 0;
+                            settings.set_boolean ("airpods-status-charging-l", chargeL);
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeL = %s", chargeL.to_string());
+                            chargeR = (chargeStatus & (flip ? 0x1 : 0x2)) != 0;
+                            settings.set_boolean ("airpods-status-charging-r", chargeR);
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeR = %s", chargeR.to_string());
+                            chargeCase = (chargeStatus & 0x4) != 0;
+                            settings.set_boolean ("airpods-status-charging-case", chargeCase);
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeCase = %s", chargeCase.to_string());
+                            // InEar status (bit 1=left; bit 3=right)
+                            int64 inEarStatus = decoded_beacon.substring(11, 1).to_int64 (null, 16);
+                            inEarL = (inEarStatus & (flip ? 0x8 : 0x2)) != 0;
+                            settings.set_boolean ("airpods-status-inear-l", inEarL);
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] inEarL = %s", inEarL.to_string());
+                            inEarR = (inEarStatus & (flip ? 0x2 : 0x8)) != 0;
+                            settings.set_boolean ("airpods-status-inear-r", inEarR);
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] inEarR = %s", inEarR.to_string());
+                            // Detect if these are AirPods Pro or regular ones
+                            model = (decoded_beacon.substring(7, 1) == "E") ? MODEL_AIRPODS_PRO : MODEL_AIRPODS_NORMAL;
+                            settings.set_string ("airpods-status-model", model);
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] model = %s", model);
+                        } else {
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] BLE beacon contains the same data. Discarding");
+                        }
                     } else {
                         debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] BLE beacon signal strength is weaker than -60dBm or weaker than previously decoded AirPods beacons. Discarding");
                     }
