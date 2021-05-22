@@ -49,7 +49,9 @@ namespace WingpanelAirPods {
         public PopoverWidgetRowIconic (string batt_icn="", string icn="", string text="", string val="") {
             hexpand = true;
             margin_start = 6;
+            margin_top = 6;
             margin_end = 12;
+            margin_bottom = 6;
             column_spacing = 3;
 
             batt_icon = new Gtk.Image.from_icon_name (batt_icn, Gtk.IconSize.DIALOG);

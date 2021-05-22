@@ -55,7 +55,9 @@ namespace WingpanelAirPods {
             airpods_disconnected = new Gtk.Grid ();
             airpods_disconnected.hexpand = true;
             airpods_disconnected.margin_start = 6;
+            airpods_disconnected.margin_top = 6;
             airpods_disconnected.margin_end = 12;
+            airpods_disconnected.margin_bottom = 6;
             airpods_disconnected.column_spacing = 3;
 
             airpods_disconnected_icon = new Gtk.Image.from_icon_name ("airpods-symbolic", Gtk.IconSize.DIALOG);
@@ -186,7 +188,7 @@ namespace WingpanelAirPods {
         }
 
         public void update_airpods_disconnected_visibility () {
-            if (!settings.get_boolean ("airpods-connected") {
+            if (!settings.get_boolean ("airpods-connected")) {
                 set_widget_visible (airpods_disconnected, true);
             } else {
                 set_widget_visible (airpods_disconnected, false);
