@@ -19,6 +19,11 @@
  * Authored by: Fernando Casas Schössow <casasfernando@outlook.com>
  */
 
+[DBus (name="org.freedesktop.DBus")]
+public interface WingpanelAirPods.DBus : Object {
+    public abstract string[] list_names () throws Error;
+}
+
 [DBus (name = "org.freedesktop.DBus.Properties")]
 public interface WingpanelAirPods.DBusProperties : Object {
     public signal void properties_changed (string interface, HashTable<string, Variant> changed_properties, string[] invalidated_properties);

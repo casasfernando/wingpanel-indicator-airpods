@@ -18,10 +18,13 @@ Being this one of my first Vala applications I'm sure that the code can be impro
 - Displays AirPods connection status
 - Displays AirPods battery charge percentage in the indicator
 - Displays battery charge status per AirPod and also for the charging case in the popover
-- Notifys the user when the AirPods battery is running low
+- Notifys the user when the AirPods battery or case is running low
+- Supports media player playback control using AirPods in-ear detection:
+    - Stop the audio: remove both AirPods from your ears, or if you’re wearing just one, remove it. If you return one to your ear within 15 seconds, play resumes automatically.
+    - Pause the audio: while listening with both AirPods, remove one. When you return it to your ear, playback resumes automatically.
 - Supports battery saver mode to preserve battery life while the system is running on battery (ie: laptops) *
 
-\* In order to preserve system battery life some indicator features will be disabled and AirPods battery level report may be less accurate
+\* In order to preserve system battery life some indicator features (ie: media player playback control using AirPods in-ear detection) will be disabled and AirPods battery level report may be less accurate
 
 ### Requirements
 

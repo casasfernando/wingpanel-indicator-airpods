@@ -32,6 +32,7 @@ namespace WingpanelAirPods {
         private int64 prev_status_batt_r = 15;
         private int64 prev_status_batt_case = 15;
         private uint airpods_beacon_discovery_timeout = 0;
+        private Gee.HashSet<string> mpris_wait_for_stop = new Gee.HashSet<string> ();
 
         private static GLib.Settings settings;
 
@@ -226,6 +227,53 @@ namespace WingpanelAirPods {
                 }
             });
 
+            // On in-ear status change control media player playback
+            settings.changed["airpods-status-inear-l"].connect ( () =>{
+                // Ignore signal:
+                // - while any AirPod is in the charging case and the case lid is open
+                // - when battery saver mode is engaged
+                // - when the AirPods are not connected
+                if (!settings.get_boolean ("airpods-status-charging-l") && !settings.get_boolean ("airpods-status-charging-r") && !(settings.get_boolean ("battery-saver-mode") && settings.get_boolean ("system-on-battery")) && settings.get_boolean ("airpods-connected")) {
+                    debug ("wingpanel-indicator-airpods: in-ear status change (left AirPod)");
+                    if (settings.get_boolean ("airpods-status-inear-l") && settings.get_boolean ("airpods-status-inear-r")) {
+                        // a- Resume playback if paused
+                        airpods_mplayer_control (1);
+                    } else if (!settings.get_boolean ("airpods-status-inear-l") && settings.get_boolean ("airpods-status-inear-r")) {
+                        // b- Pause playback if playing
+                        airpods_mplayer_control (2);
+                    } else if (settings.get_boolean ("airpods-status-inear-l") && !settings.get_boolean ("airpods-status-inear-r")) {
+                        // c- Play or Resume playback if paused
+                        airpods_mplayer_control (1);
+                    } else if (!settings.get_boolean ("airpods-status-inear-l") && !settings.get_boolean ("airpods-status-inear-r")) {
+                        // d- Pause playback if playing. Wait 15 seconds, then Stop playback if it wasn't resumed in the meantime
+                        airpods_mplayer_control (3);
+                    }
+                }
+            });
+
+            // On in-ear status change control media player playback
+            settings.changed["airpods-status-inear-r"].connect ( () =>{
+                // Ignore signal:
+                // - while any AirPod is in the charging case and the case lid is open
+                // - when battery saver mode is engaged
+                // - when the AirPods are not connected
+                if (!settings.get_boolean ("airpods-status-charging-l") && !settings.get_boolean ("airpods-status-charging-r") && !(settings.get_boolean ("battery-saver-mode") && settings.get_boolean ("system-on-battery")) && settings.get_boolean ("airpods-connected")) {
+                    debug ("wingpanel-indicator-airpods: in-ear status change (right AirPod)");
+                    if (settings.get_boolean ("airpods-status-inear-l") && settings.get_boolean ("airpods-status-inear-r")) {
+                        // a- Resume playback if paused
+                        airpods_mplayer_control (1);
+                    } else if (settings.get_boolean ("airpods-status-inear-l") && !settings.get_boolean ("airpods-status-inear-r")) {
+                        // b- Pause playback if playing
+                        airpods_mplayer_control (2);
+                    } else if (!settings.get_boolean ("airpods-status-inear-l") && settings.get_boolean ("airpods-status-inear-r")) {
+                        // c- Play or Resume playback if paused
+                        airpods_mplayer_control (1);
+                    } else if (!settings.get_boolean ("airpods-status-inear-l") && !settings.get_boolean ("airpods-status-inear-r")) {
+                        // d- Pause playback if playing. Wait 15 seconds, then Stop playback if it wasn't resumed in the meantime
+                        airpods_mplayer_control (3);
+                    }
+                }
+            });
 
         }
 
@@ -336,6 +384,74 @@ namespace WingpanelAirPods {
                 debug ("wingpanel-indicator-airpods: starting automatic AirPods beacon discovery (battery saver mode: off)");
                 AirPodsService.airpods_beacon_discovery_start.begin ();
                 airpods_notify ("Battery saver mode disengaged", "Re-enabling all indicator features");
+            }
+        }
+
+        private void airpods_mplayer_control (uint8 action) {
+            // Connect to DBus to get the list names available in the session
+            debug ("wingpanel-indicator-airpods: connecting to D-Bus to get the list of MPRIS media players available in the session");
+            try {
+                WingpanelAirPods.DBus dbus_names_conn = Bus.get_proxy_sync (BusType.SESSION, "org.freedesktop.DBus", "/org/freedesktop/DBus");
+                debug ("wingpanel-indicator-airpods: connected to D-Bus to get the list of MPRIS media players available in the session");
+                string[] dbus_names = dbus_names_conn.list_names ();
+                // Go through the list of names looking for the ones that contain 'org.mpris.MediaPlayer2'
+                foreach (string dbus_name in dbus_names) {
+                    if (dbus_name.contains ("org.mpris.MediaPlayer2")) {
+                        // Check media player playback status
+                        debug ("wingpanel-indicator-airpods: connecting to D-Bus to control MPRIS media player playback (%s)", dbus_name);
+                        try {
+                            WingpanelAirPods.MediaPlayer mplayer = Bus.get_proxy_sync (BusType.SESSION, dbus_name, "/org/mpris/MediaPlayer2");
+                            debug ("wingpanel-indicator-airpods: connected to D-Bus to control MPRIS media player playback (%s)", dbus_name);
+                            // Resume playback if paused
+                            if (action == 1 && mplayer.playback_status == "Paused") {
+                                debug ("wingpanel-indicator-airpods: play/resume MPRIS media player playback (%s)", dbus_name);
+                                // Remove the MPRIS media player from the pending Stop playback list
+                                if (mpris_wait_for_stop.contains (dbus_name)) {
+                                    mpris_wait_for_stop.remove (dbus_name);
+                                }
+                                mplayer.play ();
+                            // Pause playback if playing
+                            } else if (action == 2 && mplayer.playback_status == "Playing") {
+                                debug ("wingpanel-indicator-airpods: pause MPRIS media player playback (%s)", dbus_name);
+                                mplayer.pause ();
+                            // Pause, wait 15 seconds, then Stop playback if not resumed
+                            } else if (action == 3 && (mplayer.playback_status == "Playing" || mplayer.playback_status == "Paused")) {
+                                debug ("wingpanel-indicator-airpods: pause, wait, stop MPRIS media player playback (%s)", dbus_name);
+                                // Pause playback if playing
+                                if (mplayer.playback_status == "Playing") {
+                                    mplayer.pause ();
+                                }
+                                // Add MPRIS media player to the pending Stop playback list
+                                mpris_wait_for_stop.add (dbus_name);
+                                // Wait and Stop media player playback if not resumed
+                                airpods_mplayer_control_stop.begin (dbus_name);
+                            }
+                        } catch (Error e) {
+                            warning ("wingpanel-indicator-airpods: can't connect to D-Bus to control MPRIS media player playback (%s). Error: %s", dbus_name, e.message);
+                        }
+                    }
+                }
+            } catch (Error e) {
+                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to get the list of MPRIS media players available in the session (%s)", e.message);
+            }
+        }
+
+        private async void airpods_mplayer_control_stop (string mplayer_dbus_name) {
+            // Wait for 15 seconds
+            yield AirPodsService.airpods_wait_timeout (15);
+            // Stop playback
+            if (mpris_wait_for_stop.contains (mplayer_dbus_name)) {
+                debug ("wingpanel-indicator-airpods: connecting to D-Bus to stop MPRIS media player playback (%s)", mplayer_dbus_name);
+                try {
+                    WingpanelAirPods.MediaPlayer mplayer = Bus.get_proxy_sync (BusType.SESSION, mplayer_dbus_name, "/org/mpris/MediaPlayer2");
+                    debug ("wingpanel-indicator-airpods: connected to D-Bus to stop MPRIS media player playback (%s)", mplayer_dbus_name);
+                    if (mplayer.playback_status == "Paused") {
+                        mplayer.stop ();
+                    }
+                    mpris_wait_for_stop.remove (mplayer_dbus_name);
+                } catch (Error e) {
+                    warning ("wingpanel-indicator-airpods: can't connect to D-Bus to stop MPRIS media player playback (%s). Error: %s", mplayer_dbus_name, e.message);
+                }
             }
         }
 
