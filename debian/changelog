@@ -1,3 +1,11 @@
+wingpanel-indicator-airpods (0.3.0) bionic; urgency=medium
+
+  * Added support to enable battery saver mode on battery charge threshold
+  * Minor UI changes
+  * Added support for media player playback control using AirPods in-ear detection
+
+ -- Fernando Casas Schössow <casasfernando@outlook.com>  Tue, 25 May 2021 21:50:00 +0200
+
 wingpanel-indicator-airpods (0.2.0) bionic; urgency=medium
 
   * Optimized AirPods beacon processing conditions
