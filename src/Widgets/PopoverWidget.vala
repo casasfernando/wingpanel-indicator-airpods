@@ -111,7 +111,7 @@ namespace WingpanelAirPods {
             batt_saver_warn.attach (batt_saver_warn_label, 1, 0, 1, 1);
 
             // Enable indicator battery information switch
-            indicator_battery = new Wingpanel.Widgets.Switch ("Show percentage", settings.get_boolean ("display-indicator-battery"));
+            indicator_battery = new Wingpanel.Widgets.Switch ("Show Percentage", settings.get_boolean ("display-indicator-battery"));
             settings.bind ("display-indicator-battery", indicator_battery.get_switch (), "active", SettingsBindFlags.DEFAULT);
 
             var settings_button = new Gtk.ModelButton ();
