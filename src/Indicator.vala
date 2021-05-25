@@ -27,6 +27,7 @@ namespace WingpanelAirPods {
         private PopoverWidget popover_widget;
         private WingpanelAirPods.DBusProperties airpods_conn_mon = null;
         private WingpanelAirPods.DBusObjectManager airpods_beacon_mon = null;
+        private WingpanelAirPods.DBusProperties batt_charge_mon = null;
         private WingpanelAirPods.DBusProperties on_batt_mon = null;
         private int64 prev_status_batt_l = 15;
         private int64 prev_status_batt_r = 15;
@@ -220,10 +221,24 @@ namespace WingpanelAirPods {
                 }
             });
 
-            // Reset beacon discovery mode on battery saver mode setting change if the AirPods are connected
+            // Reset beacon discovery mode on battery saver mode setting change if the AirPods are connected and we are running on battery
             settings.changed["battery-saver-mode"].connect ( () =>{
-                if (settings.get_boolean ("airpods-connected")) {
+                if (settings.get_boolean ("airpods-connected") && settings.get_boolean ("system-on-battery")) {
                     reset_beacon_discovery_mode ("battery saver mode setting change");
+                }
+            });
+
+            // Reset beacon discovery mode on battery saver mode threshold setting change if the AirPods are connected and we are running on battery
+            settings.changed["battery-saver-mode-threshold"].connect ( () =>{
+                if (settings.get_boolean ("airpods-connected") && settings.get_boolean ("system-on-battery")) {
+                    reset_beacon_discovery_mode ("battery saver mode threshold setting change");
+                }
+            });
+
+            // Reset beacon discovery mode on system battery charge change if the AirPods are connected and we are running on battery
+            settings.changed["system-battery-percentage"].connect ( () =>{
+                if (settings.get_boolean ("airpods-connected") && settings.get_boolean ("system-on-battery")) {
+                    reset_beacon_discovery_mode ("system battery charge change");
                 }
             });
 
@@ -233,7 +248,7 @@ namespace WingpanelAirPods {
                 // - while any AirPod is in the charging case and the case lid is open
                 // - when battery saver mode is engaged
                 // - when the AirPods are not connected
-                if (!settings.get_boolean ("airpods-status-charging-l") && !settings.get_boolean ("airpods-status-charging-r") && !(settings.get_boolean ("battery-saver-mode") && settings.get_boolean ("system-on-battery")) && settings.get_boolean ("airpods-connected")) {
+                if (!settings.get_boolean ("airpods-status-charging-l") && !settings.get_boolean ("airpods-status-charging-r") && !((settings.get_int ("battery-saver-mode") == 2 || (settings.get_int ("battery-saver-mode") == 1 && settings.get_double ("system-battery-percentage") <= settings.get_int ("battery-saver-mode-threshold"))) && settings.get_boolean ("system-on-battery")) && settings.get_boolean ("airpods-connected")) {
                     debug ("wingpanel-indicator-airpods: in-ear status change (left AirPod)");
                     if (settings.get_boolean ("airpods-status-inear-l") && settings.get_boolean ("airpods-status-inear-r")) {
                         // a- Resume playback if paused
@@ -257,7 +272,7 @@ namespace WingpanelAirPods {
                 // - while any AirPod is in the charging case and the case lid is open
                 // - when battery saver mode is engaged
                 // - when the AirPods are not connected
-                if (!settings.get_boolean ("airpods-status-charging-l") && !settings.get_boolean ("airpods-status-charging-r") && !(settings.get_boolean ("battery-saver-mode") && settings.get_boolean ("system-on-battery")) && settings.get_boolean ("airpods-connected")) {
+                if (!settings.get_boolean ("airpods-status-charging-l") && !settings.get_boolean ("airpods-status-charging-r") && !((settings.get_int ("battery-saver-mode") == 2 || (settings.get_int ("battery-saver-mode") == 1 && settings.get_double ("system-battery-percentage") <= settings.get_int ("battery-saver-mode-threshold"))) && settings.get_boolean ("system-on-battery")) && settings.get_boolean ("airpods-connected")) {
                     debug ("wingpanel-indicator-airpods: in-ear status change (right AirPod)");
                     if (settings.get_boolean ("airpods-status-inear-l") && settings.get_boolean ("airpods-status-inear-r")) {
                         // a- Resume playback if paused
@@ -355,15 +370,42 @@ namespace WingpanelAirPods {
 
             on_batt_mon.properties_changed.connect((inter, cp) => {
                 if (inter == "org.freedesktop.UPower" && cp.get ("OnBattery") != null) {
-                    debug ("wingpanel-indicator-airpods: system power source changed. Running on battery (%s)", cp.get ("OnBattery").get_boolean ().to_string());
+                    debug ("wingpanel-indicator-airpods: system power source changed. Running on battery (%s)", cp.get ("OnBattery").get_boolean ().to_string ());
                     settings.set_boolean ("system-on-battery", cp.get ("OnBattery").get_boolean ());
+                }
+            });
+
+            // Check current system battery charge
+            debug ("wingpanel-indicator-airpods: connecting to D-Bus to check current system battery charge");
+            try {
+                WingpanelAirPods.UPowerDevice batt_charge = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower.Device", "/org/freedesktop/UPower/devices/battery_BAT1");
+                debug ("wingpanel-indicator-airpods: connected to D-Bus. Checking current system battery charge");
+                settings.set_double ("system-battery-percentage", batt_charge.percentage);
+                debug ("wingpanel-indicator-airpods: current system battery charge %s%%", batt_charge.percentage.to_string ());
+            } catch (IOError e) {
+                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to check current system battery charge (%s)", e.message);
+            }
+
+            // Monitor system battery charge changes
+            debug ("wingpanel-indicator-airpods: connecting to D-Bus to monitor system battery charge changes");
+            try {
+                batt_charge_mon = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.DBus.Properties", "/org/freedesktop/UPower/devices/battery_BAT1");
+                debug ("wingpanel-indicator-airpods: connected to D-Bus. Monitoring system battery charge changes");
+            } catch (IOError e) {
+                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to monitor system battery charge changes (%s)", e.message);
+            }
+
+            batt_charge_mon.properties_changed.connect((inter, cp) => {
+                if (inter == "org.freedesktop.UPower.Device" && cp.get ("Percentage") != null) {
+                    debug ("wingpanel-indicator-airpods: system battery charge changed. System battery charge remaining %s%%", cp.get ("Percentage").get_double ().to_string ());
+                    settings.set_double ("system-battery-percentage", cp.get ("Percentage").get_double ());
                 }
             });
 
         }
 
         private void reset_beacon_discovery_mode (string reason) {
-            if (settings.get_boolean ("battery-saver-mode") && settings.get_boolean ("system-on-battery")) {
+            if ((settings.get_int ("battery-saver-mode") == 2 || (settings.get_int ("battery-saver-mode") == 1 && settings.get_double ("system-battery-percentage") <= settings.get_int ("battery-saver-mode-threshold"))) && settings.get_boolean ("system-on-battery")) {
                 debug ("wingpanel-indicator-airpods: stopping automatic AirPods beacon discovery due to ".concat (reason));
                 AirPodsService.airpods_beacon_discovery_stop ();
                 // Set the timer to automatically discover AirPods beacon every 60 seconds

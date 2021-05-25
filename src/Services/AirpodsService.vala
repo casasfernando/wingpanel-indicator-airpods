@@ -269,7 +269,7 @@ namespace WingpanelAirPods {
             debug ("wingpanel-indicator-airpods: Starting AirPods beacon discovery");
             airpods_adpt.start_discovery.begin ();
             // If the system is running on battery stop beacons discovery after 15 seconds to try to save battery
-            if (settings.get_boolean ("battery-saver-mode") && settings.get_boolean ("system-on-battery")) {
+            if ((settings.get_int ("battery-saver-mode") == 2 || (settings.get_int ("battery-saver-mode") == 1 && settings.get_double ("system-battery-percentage") <= settings.get_int ("battery-saver-mode-threshold"))) && settings.get_boolean ("system-on-battery")) {
                 yield airpods_wait_timeout (15);
                 airpods_beacon_discovery_stop ();
             }

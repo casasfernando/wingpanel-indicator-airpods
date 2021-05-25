@@ -24,7 +24,8 @@ namespace WingpanelAirPods {
         private Wingpanel.Widgets.Switch indicator;
         private Wingpanel.Widgets.Switch indicator_connected_only;
         private Wingpanel.Widgets.Switch indicator_notifications;
-        private Wingpanel.Widgets.Switch battery_saver_mode;
+        private ComboRow battery_saver_mode;
+        private SpinRow battery_saver_mode_threshold_spin;
 
         public unowned Settings settings { get; construct set; }
 
@@ -48,14 +49,25 @@ namespace WingpanelAirPods {
             settings.bind ("display-notifications", indicator_notifications.get_switch (), "active", SettingsBindFlags.DEFAULT);
 
             // Enable battery saver mode
-            battery_saver_mode = new Wingpanel.Widgets.Switch ("Enable battery saver mode", settings.get_boolean ("battery-saver-mode"));
-            settings.bind ("battery-saver-mode", battery_saver_mode.get_switch (), "active", SettingsBindFlags.DEFAULT);
+            string[] battery_saver_mode_val = { "Never", "On Threshold", "Always" };
+            battery_saver_mode = new ComboRow ("Enable battery saver mode", battery_saver_mode_val, settings.get_int ("battery-saver-mode"));
+            battery_saver_mode.changed.connect( () => {
+                settings.set_int ("battery-saver-mode", battery_saver_mode.get_combo_value ());
+            });
+
+            // Battery charge threshold
+            battery_saver_mode_threshold_spin = new SpinRow ("Battery saver mode threshold (%)", 10, 99);
+            battery_saver_mode_threshold_spin.set_spin_value (settings.get_int ("battery-saver-mode-threshold"));
+            battery_saver_mode_threshold_spin.changed.connect ( () => {
+                settings.set_int ("battery-saver-mode-threshold", battery_saver_mode_threshold_spin.get_spin_value ());
+            });
 
             add (indicator);
             add (indicator_connected_only);
             add (indicator_notifications);
             add (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
             add (battery_saver_mode);
+            add (battery_saver_mode_threshold_spin);
 
         }
 
