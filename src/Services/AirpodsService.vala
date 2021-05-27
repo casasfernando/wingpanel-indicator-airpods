@@ -63,18 +63,9 @@ namespace WingpanelAirPods {
         public static void airpods_detector () {
             // Detect paired AirPods
             WingpanelAirPods.DBusObjectManager airpods_detect = null;
-
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to detect paired AirPods");
-
             try {
                 airpods_detect = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", "/");
-            } catch (IOError e) {
-                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to detect paired AirPods (%s)", e.message);
-            }
-
-            debug ("wingpanel-indicator-airpods: connected to D-Bus. Detecting paired AirPods");
-
-            try {
                 airpods_detect.get_managed_objects ().foreach ((k1, v1) => {
                     v1.foreach ((k2, v2) => {
                         if (k2 == "org.bluez.Device1" && v2.get ("Paired").get_boolean ()) {
@@ -91,21 +82,18 @@ namespace WingpanelAirPods {
                     });
                 });
             } catch (DBusError dbe) {
-                warning ("wingpanel-indicator-airpods: can't retrieve paired devices (%s)", dbe.message);
-            } catch (IOError ioe) {
-                warning ("wingpanel-indicator-airpods: can't retrieve paired devices (%s)", ioe.message);
+                warning ("wingpanel-indicator-airpods: can't detect paired devices (%s)", dbe.message);
+            } catch (IOError e) {
+                warning ("wingpanel-indicator-airpods: can't detect paired AirPods (%s)", e.message);
             }
         }
 
         public static void airpods_connection_check () {
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to check current AirPods connection status");
-
             string airpods_mac_curated = settings.get_string ("airpods-mac-addr").replace (":", "_");
             try {
                 WingpanelAirPods.Device airpods_dev = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", settings.get_string ("airpods-bt-adapter").concat ("/dev_", airpods_mac_curated));
-                debug ("wingpanel-indicator-airpods: connected to D-Bus. Checking AirPods connection status");
-                bool airpods_connected_val = airpods_dev.connected;
-                if (airpods_connected_val) {
+                if (airpods_dev.connected) {
                     debug ("wingpanel-indicator-airpods: AirPods are currently connected");
                     settings.set_boolean ("airpods-connected", true);
                 } else {
@@ -113,7 +101,7 @@ namespace WingpanelAirPods {
                     settings.set_boolean ("airpods-connected", false);
                 }
             } catch (IOError e) {
-                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to check current AirPods connection status (%s)", e.message);
+                warning ("wingpanel-indicator-airpods: can't check current AirPods connection status (%s)", e.message);
             }
 
         }
@@ -175,55 +163,55 @@ namespace WingpanelAirPods {
                             debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] BLE beacon contains new data");
                             prev_decoded_beacon = decoded_beacon;
                             bool flip = isFlipped (decoded_beacon);
-                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] isFlipped = %s", flip.to_string());
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] isFlipped = %s", flip.to_string ());
                             // Only update changed values
                             // Left AirPod (0-10 batt; 15=disconnected)
                             leftStatus = decoded_beacon.substring(flip ? 12 : 13, 1).to_int64 (null, 16);
                             if (leftStatus != settings.get_int64 ("airpods-status-batt-l")) {
                                 settings.set_int64 ("airpods-status-batt-l", leftStatus);
                             }
-                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] leftStatus = %s", leftStatus.to_string());
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] leftStatus = %s", leftStatus.to_string ());
                             // Right AirPod (0-10 batt; 15=disconnected)
                             rightStatus = decoded_beacon.substring(flip ? 13 : 12, 1).to_int64 (null, 16);
                             if (rightStatus != settings.get_int64 ("airpods-status-batt-r")) {
                                 settings.set_int64 ("airpods-status-batt-r", rightStatus);
                             }
-                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] rightStatus = %s", rightStatus.to_string());
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] rightStatus = %s", rightStatus.to_string ());
                             // Case (0-10 batt; 15=disconnected)
                             caseStatus = decoded_beacon.substring(15, 1).to_int64 (null, 16);
                             if (caseStatus != settings.get_int64 ("airpods-status-batt-case")) {
                                 settings.set_int64 ("airpods-status-batt-case", caseStatus);
                             }
-                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] caseStatus = %s", caseStatus.to_string());
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] caseStatus = %s", caseStatus.to_string ());
                             // Charge status (bit 0=left; bit 1=right; bit 2=case)
                             int64 chargeStatus = decoded_beacon.substring(14, 1).to_int64 (null, 16);
                             chargeL = (chargeStatus & (flip ? 0x2 : 0x1)) != 0;
                             if (chargeL != settings.get_boolean ("airpods-status-charging-l")) {
                                 settings.set_boolean ("airpods-status-charging-l", chargeL);
                             }
-                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeL = %s", chargeL.to_string());
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeL = %s", chargeL.to_string ());
                             chargeR = (chargeStatus & (flip ? 0x1 : 0x2)) != 0;
                             if (chargeR != settings.get_boolean ("airpods-status-charging-r")) {
                                 settings.set_boolean ("airpods-status-charging-r", chargeR);
                             }
-                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeR = %s", chargeR.to_string());
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeR = %s", chargeR.to_string ());
                             chargeCase = (chargeStatus & 0x4) != 0;
                             if (chargeCase != settings.get_boolean ("airpods-status-charging-case")) {
                                 settings.set_boolean ("airpods-status-charging-case", chargeCase);
                             }
-                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeCase = %s", chargeCase.to_string());
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] chargeCase = %s", chargeCase.to_string ());
                             // InEar status (bit 1=left; bit 3=right)
                             int64 inEarStatus = decoded_beacon.substring(11, 1).to_int64 (null, 16);
                             inEarL = (inEarStatus & (flip ? 0x8 : 0x2)) != 0;
                             if (inEarL != settings.get_boolean ("airpods-status-inear-l")) {
                                 settings.set_boolean ("airpods-status-inear-l", inEarL);
                             }
-                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] inEarL = %s", inEarL.to_string());
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] inEarL = %s", inEarL.to_string ());
                             inEarR = (inEarStatus & (flip ? 0x2 : 0x8)) != 0;
                             if (inEarR != settings.get_boolean ("airpods-status-inear-r")) {
                                 settings.set_boolean ("airpods-status-inear-r", inEarR);
                             }
-                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] inEarR = %s", inEarR.to_string());
+                            debug ("wingpanel-indicator-airpods: [airpods-beacon-analyzer] inEarR = %s", inEarR.to_string ());
                             // Detect if these are AirPods Pro or regular ones
                             model = (decoded_beacon.substring(7, 1) == "E") ? MODEL_AIRPODS_PRO : MODEL_AIRPODS_NORMAL;
                             if (model != settings.get_string ("airpods-status-model")) {
@@ -252,27 +240,36 @@ namespace WingpanelAirPods {
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to start AirPods beacon discovery");
             try {
                 airpods_adpt = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", settings.get_string ("airpods-bt-adapter"));
-            } catch (IOError e) {
-                warning ("wingpanel-indicator-airpods: can't connect to D-Bus (%s)", e.message);
-            }
-
-            debug ("wingpanel-indicator-airpods: Setting AirPods beacon discovery filter");
-            HashTable<string, Variant> filter = new HashTable<string, Variant> (str_hash, str_equal);
-            filter.insert("Transport", new Variant.string ("le"));
-            //filter.insert("DuplicateData", new Variant.boolean (false));
-            try {
+                debug ("wingpanel-indicator-airpods: Setting AirPods beacon discovery filter");
+                HashTable<string, Variant> filter = new HashTable<string, Variant> (str_hash, str_equal);
+                filter.insert("Transport", new Variant.string ("le"));
+                //filter.insert("DuplicateData", new Variant.boolean (false));
                 airpods_adpt.set_discovery_filter (filter);
+                debug ("wingpanel-indicator-airpods: Starting AirPods beacon discovery");
+                airpods_adpt.start_discovery.begin ();
+                // If the system is running on battery stop beacons discovery after 15 seconds to try to save battery
+                if ((settings.get_int ("battery-saver-mode") == 2 || (settings.get_int ("battery-saver-mode") == 1 && settings.get_double ("system-battery-percentage") <= settings.get_int ("battery-saver-mode-threshold"))) && settings.get_boolean ("system-on-battery")) {
+                    yield airpods_wait_timeout (15);
+                    airpods_beacon_discovery_stop ();
+                }
             } catch (Error e) {
-                warning ("wingpanel-indicator-airpods: can't set AirPods beacon discovery filter (%s)", e.message);
+                warning ("wingpanel-indicator-airpods: can't start AirPods beacon discovery (%s)", e.message);
+            }
+        }
+
+        public static bool airpods_beacon_discovery_status () {
+            WingpanelAirPods.Adapter airpods_adpt = null;
+            bool beacon_discovery_status = false;
+            debug ("wingpanel-indicator-airpods: connecting to D-Bus to get AirPods beacon discovery status");
+            try {
+                airpods_adpt = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", settings.get_string ("airpods-bt-adapter"));
+                beacon_discovery_status = airpods_adpt.discovering;
+                debug ("wingpanel-indicator-airpods: AirPods beacon discovery status: %s", beacon_discovery_status.to_string ());
+            } catch (IOError e) {
+                warning ("wingpanel-indicator-airpods: can't get AirPods beacon discovery status (%s)", e.message);
             }
 
-            debug ("wingpanel-indicator-airpods: Starting AirPods beacon discovery");
-            airpods_adpt.start_discovery.begin ();
-            // If the system is running on battery stop beacons discovery after 15 seconds to try to save battery
-            if ((settings.get_int ("battery-saver-mode") == 2 || (settings.get_int ("battery-saver-mode") == 1 && settings.get_double ("system-battery-percentage") <= settings.get_int ("battery-saver-mode-threshold"))) && settings.get_boolean ("system-on-battery")) {
-                yield airpods_wait_timeout (15);
-                airpods_beacon_discovery_stop ();
-            }
+            return beacon_discovery_status;
         }
 
         public static void airpods_beacon_discovery_stop () {
@@ -280,12 +277,12 @@ namespace WingpanelAirPods {
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to stop AirPods beacon discovery");
             try {
                 airpods_adpt = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", settings.get_string ("airpods-bt-adapter"));
+                debug ("wingpanel-indicator-airpods: Stopping AirPods beacon discovery");
+                airpods_adpt.stop_discovery.begin ();
+                strongest_rssi = -75;
             } catch (IOError e) {
-                warning ("wingpanel-indicator-airpods: can't connect to D-Bus (%s)", e.message);
+                warning ("wingpanel-indicator-airpods: can't stop AirPods beacon discovery (%s)", e.message);
             }
-            debug ("wingpanel-indicator-airpods: Stopping AirPods beacon discovery");
-            airpods_adpt.stop_discovery.begin ();
-            strongest_rssi = -75;
         }
 
         public static void airpods_interface_remove (ObjectPath iface) {
@@ -293,12 +290,7 @@ namespace WingpanelAirPods {
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to remove BLE beacon interface");
             try {
                 airpods_adpt = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", settings.get_string ("airpods-bt-adapter"));
-            } catch (IOError e) {
-                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to remove BLE beacon interface (%s)", e.message);
-            }
-
-            debug ("wingpanel-indicator-airpods: removing beacon interface");
-            try {
+                debug ("wingpanel-indicator-airpods: removing BLE beacon interface");
                 airpods_adpt.remove_device (iface);
             } catch (Error e) {
                 warning ("wingpanel-indicator-airpods: can't remove BLE beacon interface (%s)", e.message);
