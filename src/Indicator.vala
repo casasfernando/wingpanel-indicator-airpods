@@ -183,7 +183,7 @@ namespace WingpanelAirPods {
                         settings.set_boolean ("display-indicator-effective", true);
                     }
                     debug ("wingpanel-indicator-airpods: AirPods connected. Starting AirPods beacon discovery.");
-                    AirPodsService.airpods_beacon_discovery_start.begin ();
+                    reset_beacon_discovery_mode ("AirPods connected");
                 } else {
                     debug ("wingpanel-indicator-airpods: AirPods disconnected. Stopping automatic AirPods beacon discovery");
                     if (airpods_beacon_discovery_timeout != 0) {
@@ -217,28 +217,28 @@ namespace WingpanelAirPods {
             // Reset beacon discovery mode on system power source change if the AirPods are connected
             settings.changed["system-on-battery"].connect ( () =>{
                 if (settings.get_boolean ("airpods-connected")) {
-                    reset_beacon_discovery_mode ("system power source change");
+                    engage_battery_saver_mode ("system power source change");
                 }
             });
 
             // Reset beacon discovery mode on battery saver mode setting change if the AirPods are connected and we are running on battery
             settings.changed["battery-saver-mode"].connect ( () =>{
                 if (settings.get_boolean ("airpods-connected") && settings.get_boolean ("system-on-battery")) {
-                    reset_beacon_discovery_mode ("battery saver mode setting change");
+                    engage_battery_saver_mode ("battery saver mode setting change");
                 }
             });
 
             // Reset beacon discovery mode on battery saver mode threshold setting change if the AirPods are connected and we are running on battery
             settings.changed["battery-saver-mode-threshold"].connect ( () =>{
                 if (settings.get_boolean ("airpods-connected") && settings.get_boolean ("system-on-battery")) {
-                    reset_beacon_discovery_mode ("battery saver mode threshold setting change");
+                    engage_battery_saver_mode ("battery saver mode threshold setting change");
                 }
             });
 
             // Reset beacon discovery mode on system battery charge change if the AirPods are connected and we are running on battery
             settings.changed["system-battery-percentage"].connect ( () =>{
                 if (settings.get_boolean ("airpods-connected") && settings.get_boolean ("system-on-battery")) {
-                    reset_beacon_discovery_mode ("system battery charge change");
+                    engage_battery_saver_mode ("system battery charge change");
                 }
             });
 
@@ -248,7 +248,7 @@ namespace WingpanelAirPods {
                 // - while any AirPod is in the charging case and the case lid is open
                 // - when battery saver mode is engaged
                 // - when the AirPods are not connected
-                if (!settings.get_boolean ("airpods-status-charging-l") && !settings.get_boolean ("airpods-status-charging-r") && !((settings.get_int ("battery-saver-mode") == 2 || (settings.get_int ("battery-saver-mode") == 1 && settings.get_double ("system-battery-percentage") <= settings.get_int ("battery-saver-mode-threshold"))) && settings.get_boolean ("system-on-battery")) && settings.get_boolean ("airpods-connected")) {
+                if (!settings.get_boolean ("airpods-status-charging-l") && !settings.get_boolean ("airpods-status-charging-r") && !settings.get_boolean ("battery-saver-mode-engaged") && settings.get_boolean ("airpods-connected")) {
                     debug ("wingpanel-indicator-airpods: in-ear status change (left AirPod)");
                     if (settings.get_boolean ("airpods-status-inear-l") && settings.get_boolean ("airpods-status-inear-r")) {
                         // a- Resume playback if paused
@@ -272,7 +272,7 @@ namespace WingpanelAirPods {
                 // - while any AirPod is in the charging case and the case lid is open
                 // - when battery saver mode is engaged
                 // - when the AirPods are not connected
-                if (!settings.get_boolean ("airpods-status-charging-l") && !settings.get_boolean ("airpods-status-charging-r") && !((settings.get_int ("battery-saver-mode") == 2 || (settings.get_int ("battery-saver-mode") == 1 && settings.get_double ("system-battery-percentage") <= settings.get_int ("battery-saver-mode-threshold"))) && settings.get_boolean ("system-on-battery")) && settings.get_boolean ("airpods-connected")) {
+                if (!settings.get_boolean ("airpods-status-charging-l") && !settings.get_boolean ("airpods-status-charging-r") && !settings.get_boolean ("battery-saver-mode-engaged") && settings.get_boolean ("airpods-connected")) {
                     debug ("wingpanel-indicator-airpods: in-ear status change (right AirPod)");
                     if (settings.get_boolean ("airpods-status-inear-l") && settings.get_boolean ("airpods-status-inear-r")) {
                         // a- Resume playback if paused
@@ -402,12 +402,39 @@ namespace WingpanelAirPods {
                 }
             });
 
+            engage_battery_saver_mode ("indicator startup");
+
+        }
+
+        private void engage_battery_saver_mode (string reason) {
+            // Engage/Disengage battery saver mode
+            if ((settings.get_int ("battery-saver-mode") == 2 || (settings.get_int ("battery-saver-mode") == 1 && settings.get_double ("system-battery-percentage") <= settings.get_int ("battery-saver-mode-threshold"))) && settings.get_boolean ("system-on-battery")) {
+                if (!settings.get_boolean ("battery-saver-mode-engaged")) {
+                    settings.set_boolean ("battery-saver-mode-engaged", true);
+                    // Reset beacon discovery mode if the AirPods are connected
+                    if (settings.get_boolean ("airpods-connected") && reason != "indicator startup") {
+                        reset_beacon_discovery_mode (reason);
+                    }
+                }
+            } else {
+                if (settings.get_boolean ("battery-saver-mode-engaged")) {
+                    settings.set_boolean ("battery-saver-mode-engaged", false);
+                    // Reset beacon discovery mode if the AirPods are connected
+                    if (settings.get_boolean ("airpods-connected") && reason != "indicator startup") {
+                        reset_beacon_discovery_mode (reason);
+                    }
+                }
+            }
         }
 
         private void reset_beacon_discovery_mode (string reason) {
-            if ((settings.get_int ("battery-saver-mode") == 2 || (settings.get_int ("battery-saver-mode") == 1 && settings.get_double ("system-battery-percentage") <= settings.get_int ("battery-saver-mode-threshold"))) && settings.get_boolean ("system-on-battery")) {
+            // Check if the bluetooth adapter is discovering beacons and stop it if needed
+            if (AirPodsService.airpods_beacon_discovery_status ()) {
                 debug ("wingpanel-indicator-airpods: stopping automatic AirPods beacon discovery due to ".concat (reason));
                 AirPodsService.airpods_beacon_discovery_stop ();
+            }
+            // Restart beacon discovery
+            if (settings.get_boolean ("battery-saver-mode-engaged")) {
                 // Set the timer to automatically discover AirPods beacon every 60 seconds
                 debug ("wingpanel-indicator-airpods: starting automatic AirPods beacon discovery every 60 seconds (battery saver mode: on)");
                 airpods_beacon_discovery_timeout = Timeout.add_seconds (60, () => {
@@ -415,10 +442,9 @@ namespace WingpanelAirPods {
                     return true;
                 });
                 AirPodsService.airpods_beacon_discovery_start.begin ();
-                airpods_notify ("Battery saver mode engaged", "In order to preserve system battery life some indicator features will be disabled and AirPods battery level report may be less accurate.");
+                airpods_notify ("Battery saver mode engaged", "In order to preserve system battery life some indicator features (e.g. media player playback control using AirPods in-ear detection) will be disabled and AirPods battery level report may be less accurate.");
             } else {
-                debug ("wingpanel-indicator-airpods: stopping automatic AirPods beacon discovery due to ".concat (reason));
-                AirPodsService.airpods_beacon_discovery_stop ();
+                // Remove the time to automatically discover AirPods beacon every 60 seconds if present
                 if (airpods_beacon_discovery_timeout != 0) {
                     GLib.Source.remove (airpods_beacon_discovery_timeout);
                     airpods_beacon_discovery_timeout = 0;

@@ -5,6 +5,11 @@
       <summary>Enable battery saver mode</summary>
       <description></description>
     </key>
+    <key type="b" name="battery-saver-mode-engaged">
+      <default>false</default>
+      <summary>Battery saver mode engaged</summary>
+      <description></description>
+    </key>
     <key type="i" name="battery-saver-mode-threshold">
       <default>20</default>
       <range min="10" max="99"/>
