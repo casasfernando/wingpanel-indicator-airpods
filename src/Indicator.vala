@@ -159,16 +159,14 @@ namespace WingpanelAirPods {
         }
 
         private void airpods_connection_monitor () {
-            debug ("wingpanel-indicator-airpods: connecting to D-Bus to monitor AirPods connection status");
-
             string airpods_mac_curated = settings.get_string ("airpods-mac-addr").replace (":", "_");
+            debug ("wingpanel-indicator-airpods: connecting to D-Bus to monitor AirPods with MAC %s connection status", airpods_mac_curated);
             try {
                 airpods_conn_mon = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.DBus.Properties", settings.get_string ("airpods-bt-adapter").concat ("/dev_", airpods_mac_curated));
             } catch (IOError e) {
                 warning ("wingpanel-indicator-airpods: can't connect to D-Bus to monitor AirPods connection status (%s)", e.message);
             }
 
-            debug ("wingpanel-indicator-airpods: connected to D-Bus. Monitoring connection status of AirPods with MAC %s", airpods_mac_curated);
             airpods_conn_mon.properties_changed.connect((inter, cp) => {
                 if (inter == "org.bluez.Device1" && cp.get ("Connected") != null) {
                     debug ("wingpanel-indicator-airpods: AirPods connection status changed (%s)", cp.get ("Connected").get_boolean ().to_string());
@@ -299,7 +297,6 @@ namespace WingpanelAirPods {
             } catch (IOError e) {
                 warning ("wingpanel-indicator-airpods: can't connect to D-Bus to monitor AirPods beacons (%s)", e.message);
             }
-            debug ("wingpanel-indicator-airpods: connected to D-Bus. Monitoring AirPods beacons");
 
             airpods_beacon_mon.interfaces_added.connect((objpath, iface) => {
                 // Check that the signal is for a new org.bluez.Device1 interface
@@ -309,7 +306,7 @@ namespace WingpanelAirPods {
                     string addr_type = "";
                     if (iface.get ("org.bluez.Device1").contains ("AddressType")) {
                         addr_type = iface.get ("org.bluez.Device1").get ("AddressType").get_string ();
-                        debug ("wingpanel-indicator-airpods: interface address type = '%s'", addr_type);
+                        debug ("wingpanel-indicator-airpods: interface address type: %s", addr_type);
                         // Check if the interface contains Manufacturer Data
                         bool has_man_data = iface.get ("org.bluez.Device1").contains ("ManufacturerData");
                         // If the address type is public, and we didn't detect any AirPods paired on init, try to detect paired AirPods now
@@ -346,7 +343,6 @@ namespace WingpanelAirPods {
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to check current system power source");
             try {
                 WingpanelAirPods.UPower system_upower = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower", "/org/freedesktop/UPower");
-                debug ("wingpanel-indicator-airpods: connected to D-Bus. Checking current system power source");
                 bool on_batt = system_upower.on_battery;
                 if (on_batt) {
                     debug ("wingpanel-indicator-airpods: system is running on battery");
@@ -379,7 +375,6 @@ namespace WingpanelAirPods {
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to check current system battery charge");
             try {
                 WingpanelAirPods.UPowerDevice batt_charge = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower.Device", "/org/freedesktop/UPower/devices/battery_BAT1");
-                debug ("wingpanel-indicator-airpods: connected to D-Bus. Checking current system battery charge");
                 settings.set_double ("system-battery-percentage", batt_charge.percentage);
                 debug ("wingpanel-indicator-airpods: current system battery charge %s%%", batt_charge.percentage.to_string ());
             } catch (IOError e) {
@@ -390,7 +385,6 @@ namespace WingpanelAirPods {
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to monitor system battery charge changes");
             try {
                 batt_charge_mon = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.DBus.Properties", "/org/freedesktop/UPower/devices/battery_BAT1");
-                debug ("wingpanel-indicator-airpods: connected to D-Bus. Monitoring system battery charge changes");
             } catch (IOError e) {
                 warning ("wingpanel-indicator-airpods: can't connect to D-Bus to monitor system battery charge changes (%s)", e.message);
             }
@@ -460,7 +454,6 @@ namespace WingpanelAirPods {
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to get the list of MPRIS media players available in the session");
             try {
                 WingpanelAirPods.DBus dbus_names_conn = Bus.get_proxy_sync (BusType.SESSION, "org.freedesktop.DBus", "/org/freedesktop/DBus");
-                debug ("wingpanel-indicator-airpods: connected to D-Bus to get the list of MPRIS media players available in the session");
                 string[] dbus_names = dbus_names_conn.list_names ();
                 // Go through the list of names looking for the ones that contain 'org.mpris.MediaPlayer2'
                 foreach (string dbus_name in dbus_names) {
@@ -469,7 +462,6 @@ namespace WingpanelAirPods {
                         debug ("wingpanel-indicator-airpods: connecting to D-Bus to control MPRIS media player playback (%s)", dbus_name);
                         try {
                             WingpanelAirPods.MediaPlayer mplayer = Bus.get_proxy_sync (BusType.SESSION, dbus_name, "/org/mpris/MediaPlayer2");
-                            debug ("wingpanel-indicator-airpods: connected to D-Bus to control MPRIS media player playback (%s)", dbus_name);
                             // Resume playback if paused
                             if (action == 1 && mplayer.playback_status == "Paused") {
                                 debug ("wingpanel-indicator-airpods: play/resume MPRIS media player playback (%s)", dbus_name);
@@ -512,7 +504,6 @@ namespace WingpanelAirPods {
                 debug ("wingpanel-indicator-airpods: connecting to D-Bus to stop MPRIS media player playback (%s)", mplayer_dbus_name);
                 try {
                     WingpanelAirPods.MediaPlayer mplayer = Bus.get_proxy_sync (BusType.SESSION, mplayer_dbus_name, "/org/mpris/MediaPlayer2");
-                    debug ("wingpanel-indicator-airpods: connected to D-Bus to stop MPRIS media player playback (%s)", mplayer_dbus_name);
                     if (mplayer.playback_status == "Paused") {
                         mplayer.stop ();
                     }
