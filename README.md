@@ -24,7 +24,7 @@ Being this one of my first Vala applications I'm sure that the code can be impro
     - Pause the audio: while listening with both AirPods, remove one. When you return it to your ear, playback resumes automatically.
 - Supports battery saver mode to preserve battery life while the system is running on battery (e.g. laptops) *
 
-\* In order to preserve system battery life some indicator features (ie: media player playback control using AirPods in-ear detection) will be disabled and AirPods battery level report may be less accurate
+\* In order to preserve system battery life some indicator features (e.g. media player playback control using AirPods in-ear detection) will be disabled and AirPods battery level report may be less accurate
 
 ### Requirements
 
