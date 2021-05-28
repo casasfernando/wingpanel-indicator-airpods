@@ -362,7 +362,6 @@ namespace WingpanelAirPods {
             } catch (IOError e) {
                 warning ("wingpanel-indicator-airpods: can't connect to D-Bus to monitor system power source changes (%s)", e.message);
             }
-            debug ("wingpanel-indicator-airpods: connected to D-Bus. Monitoring system power source changes");
 
             on_batt_mon.properties_changed.connect((inter, cp) => {
                 if (inter == "org.freedesktop.UPower" && cp.get ("OnBattery") != null) {
@@ -374,9 +373,12 @@ namespace WingpanelAirPods {
             // Check current system battery charge
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to check current system battery charge");
             try {
-                WingpanelAirPods.UPowerDevice batt_charge = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower.Device", "/org/freedesktop/UPower/devices/battery_BAT1");
+                WingpanelAirPods.UPowerDevice batt_charge = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower", "/org/freedesktop/UPower/devices/battery_BAT1");
                 settings.set_double ("system-battery-percentage", batt_charge.percentage);
                 debug ("wingpanel-indicator-airpods: current system battery charge %s%%", batt_charge.percentage.to_string ());
+                // Alternative method to calculate system battery charge
+                //double my_batt_percentage = (batt_charge.energy - batt_charge.energy_empty) / (batt_charge.energy_full - batt_charge.energy_empty) * 100;
+                //debug ("wingpanel-indicator-airpods: current system battery charge %s%%", my_batt_percentage.to_string ());
             } catch (IOError e) {
                 warning ("wingpanel-indicator-airpods: can't connect to D-Bus to check current system battery charge (%s)", e.message);
             }
@@ -445,7 +447,9 @@ namespace WingpanelAirPods {
                 }
                 debug ("wingpanel-indicator-airpods: starting automatic AirPods beacon discovery (battery saver mode: off)");
                 AirPodsService.airpods_beacon_discovery_start.begin ();
-                airpods_notify ("Battery saver mode disengaged", "Re-enabling all indicator features");
+                if (reason != "AirPods connected") {
+                    airpods_notify ("Battery saver mode disengaged", "Re-enabling all indicator features");
+                }
             }
         }
 

@@ -26,5 +26,8 @@ public interface WingpanelAirPods.UPower : Object {
 
 [DBus (name = "org.freedesktop.UPower.Device")]
 public interface WingpanelAirPods.UPowerDevice : Object {
-    public abstract double percentage {  get; set; }
+    public abstract double energy { get; }
+    public abstract double energy_empty { get; }
+    public abstract double energy_full { get; }
+    public abstract double percentage { get; }
 }
