@@ -19,8 +19,19 @@
  * Authored by: Fernando Casas Schössow <casasfernando@outlook.com>
  */
 
+[DBus (name = "org.bluez.Adapter1")]
+public interface WingpanelAirPods.BluezAdapter : Object {
+    public abstract void remove_device (ObjectPath device) throws Error;
+    public abstract void set_discovery_filter (HashTable<string, Variant> properties) throws Error;
+    public abstract async void start_discovery () throws Error;
+    public abstract async void stop_discovery () throws Error;
+
+    public abstract bool discovering { get; }
+    public abstract bool powered { get; set; }
+}
+
 [DBus (name = "org.bluez.Device1")]
-public interface WingpanelAirPods.Device : Object {
+public interface WingpanelAirPods.BluezDevice : Object {
     public abstract string[] UUIDs { owned get; }
     public abstract bool blocked { owned get; set; }
     public abstract bool connected { owned get; }

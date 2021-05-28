@@ -28,3 +28,11 @@ public interface WingpanelAirPods.DBus : Object {
 public interface WingpanelAirPods.DBusProperties : Object {
     public signal void properties_changed (string interface, HashTable<string, Variant> changed_properties, string[] invalidated_properties);
 }
+
+[DBus (name = "org.freedesktop.DBus.ObjectManager")]
+public interface WingpanelAirPods.DBusObjectManager : Object {
+    public signal void interfaces_added (ObjectPath object, HashTable<string, HashTable<string, Variant>> interfaces);
+    public signal void interfaces_removed (ObjectPath object, string[] interfaces);
+
+    public abstract HashTable<ObjectPath, HashTable<string, HashTable<string, Variant>>> get_managed_objects() throws DBusError, IOError;
+}

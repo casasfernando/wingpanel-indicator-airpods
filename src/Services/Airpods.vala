@@ -92,7 +92,7 @@ namespace WingpanelAirPods {
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to check current AirPods connection status");
             string airpods_mac_curated = settings.get_string ("airpods-mac-addr").replace (":", "_");
             try {
-                WingpanelAirPods.Device airpods_dev = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", settings.get_string ("airpods-bt-adapter").concat ("/dev_", airpods_mac_curated));
+                WingpanelAirPods.BluezDevice airpods_dev = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", settings.get_string ("airpods-bt-adapter").concat ("/dev_", airpods_mac_curated));
                 if (airpods_dev.connected) {
                     debug ("wingpanel-indicator-airpods: AirPods are currently connected");
                     settings.set_boolean ("airpods-connected", true);
@@ -236,7 +236,7 @@ namespace WingpanelAirPods {
         }
 
         public static async void airpods_beacon_discovery_start () {
-            WingpanelAirPods.Adapter airpods_adpt = null;
+            WingpanelAirPods.BluezAdapter airpods_adpt = null;
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to start AirPods beacon discovery");
             try {
                 airpods_adpt = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", settings.get_string ("airpods-bt-adapter"));
@@ -258,7 +258,7 @@ namespace WingpanelAirPods {
         }
 
         public static bool airpods_beacon_discovery_status () {
-            WingpanelAirPods.Adapter airpods_adpt = null;
+            WingpanelAirPods.BluezAdapter airpods_adpt = null;
             bool beacon_discovery_status = false;
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to get AirPods beacon discovery status");
             try {
@@ -273,7 +273,7 @@ namespace WingpanelAirPods {
         }
 
         public static void airpods_beacon_discovery_stop () {
-            WingpanelAirPods.Adapter airpods_adpt = null;
+            WingpanelAirPods.BluezAdapter airpods_adpt = null;
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to stop AirPods beacon discovery");
             try {
                 airpods_adpt = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", settings.get_string ("airpods-bt-adapter"));
@@ -286,7 +286,7 @@ namespace WingpanelAirPods {
         }
 
         public static void airpods_interface_remove (ObjectPath iface) {
-            WingpanelAirPods.Adapter airpods_adpt = null;
+            WingpanelAirPods.BluezAdapter airpods_adpt = null;
             debug ("wingpanel-indicator-airpods: connecting to D-Bus to remove BLE beacon interface");
             try {
                 airpods_adpt = Bus.get_proxy_sync (BusType.SYSTEM, "org.bluez", settings.get_string ("airpods-bt-adapter"));
