@@ -1,3 +1,11 @@
+wingpanel-indicator-airpods (0.3.5) bionic; urgency=medium
+
+  * Added support for system battery device detection
+  * Fixed bug detecting system battery charge on start up
+  * Fix wrongly sent notification on battery charge change even if no change in battery saver mode (engaged/disengaged)
+
+ -- Fernando Casas Schössow <casasfernando@outlook.com>  Fri, 28 May 2021 23:07:00 +0200
+
 wingpanel-indicator-airpods (0.3.0) bionic; urgency=medium
 
   * Added support to enable battery saver mode on battery charge threshold
