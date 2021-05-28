@@ -43,5 +43,6 @@ public interface WingpanelAirPods.UPowerDevice : Object {
     public abstract double energy_empty { get; }
     public abstract double energy_full { get; }
     public abstract double percentage { get; }
+    [DBus (name = "Type")]
     public abstract DeviceType device_type { get; }
 }
