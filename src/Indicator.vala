@@ -339,64 +339,86 @@ namespace WingpanelAirPods {
         }
 
         private void on_battery_monitor () {
-            // Check current system power source
-            debug ("wingpanel-indicator-airpods: connecting to D-Bus to check current system power source");
+            // Detect if the system has a battery device
+            bool has_battery = false;
+            ObjectPath batt_dev= new ObjectPath ("/");
+            debug ("wingpanel-indicator-airpods: connecting to D-Bus to detect system battery device");
             try {
-                WingpanelAirPods.UPower system_upower = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower", "/org/freedesktop/UPower");
-                bool on_batt = system_upower.on_battery;
-                if (on_batt) {
-                    debug ("wingpanel-indicator-airpods: system is running on battery");
-                    settings.set_boolean ("system-on-battery", true);
-                } else {
-                    debug ("wingpanel-indicator-airpods: system is not running on battery");
-                    settings.set_boolean ("system-on-battery", false);
+                WingpanelAirPods.UPower system_upower_get_devices = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower", "/org/freedesktop/UPower");
+                ObjectPath[] system_upower_devices = system_upower_get_devices.enumerate_devices ();
+                foreach (ObjectPath system_upower_device in system_upower_devices) {
+                    WingpanelAirPods.UPowerDevice system_upower_device_properties = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower", system_upower_device);
+                    // Check if the device is a system battery
+                    if (system_upower_device_properties.device_type == 2) {
+                        has_battery = true;
+                        batt_dev = system_upower_device;
+                        debug ("wingpanel-indicator-airpods: system battery detected. Device path: %s", system_upower_device);
+                        // Check current system battery charge
+                        settings.set_double ("system-battery-percentage", system_upower_device_properties.percentage);
+                        debug ("wingpanel-indicator-airpods: current system battery charge %s%%", system_upower_device_properties.percentage.to_string ());
+                        // Alternative method to calculate system battery charge
+                        //double my_batt_percentage = (system_upower_device_properties.energy - system_upower_device_properties.energy_empty) / (system_upower_device_properties.energy_full - system_upower_device_properties.energy_empty) * 100;
+                        //debug ("wingpanel-indicator-airpods: current system battery charge %s%%", my_batt_percentage.to_string ());
+                        break;
+                    }
                 }
-            } catch (IOError e) {
-                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to check current system power source (%s)", e.message);
-            }
-
-            // Monitor system power source changes
-            debug ("wingpanel-indicator-airpods: connecting to D-Bus to monitor system power source changes");
-            try {
-                on_batt_mon = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.DBus.Properties", "/org/freedesktop/UPower");
-            } catch (IOError e) {
-                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to monitor system power source changes (%s)", e.message);
-            }
-
-            on_batt_mon.properties_changed.connect((inter, cp) => {
-                if (inter == "org.freedesktop.UPower" && cp.get ("OnBattery") != null) {
-                    debug ("wingpanel-indicator-airpods: system power source changed. Running on battery (%s)", cp.get ("OnBattery").get_boolean ().to_string ());
-                    settings.set_boolean ("system-on-battery", cp.get ("OnBattery").get_boolean ());
+                if (!has_battery) {
+                    debug ("wingpanel-indicator-airpods: no system battery detected");
                 }
-            });
-
-            // Check current system battery charge
-            debug ("wingpanel-indicator-airpods: connecting to D-Bus to check current system battery charge");
-            try {
-                WingpanelAirPods.UPowerDevice batt_charge = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower", "/org/freedesktop/UPower/devices/battery_BAT1");
-                settings.set_double ("system-battery-percentage", batt_charge.percentage);
-                debug ("wingpanel-indicator-airpods: current system battery charge %s%%", batt_charge.percentage.to_string ());
-                // Alternative method to calculate system battery charge
-                //double my_batt_percentage = (batt_charge.energy - batt_charge.energy_empty) / (batt_charge.energy_full - batt_charge.energy_empty) * 100;
-                //debug ("wingpanel-indicator-airpods: current system battery charge %s%%", my_batt_percentage.to_string ());
-            } catch (IOError e) {
-                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to check current system battery charge (%s)", e.message);
+            } catch (Error e) {
+                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to detect system battery device path (%s)", e.message);
             }
 
-            // Monitor system battery charge changes
-            debug ("wingpanel-indicator-airpods: connecting to D-Bus to monitor system battery charge changes");
-            try {
-                batt_charge_mon = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.DBus.Properties", "/org/freedesktop/UPower/devices/battery_BAT1");
-            } catch (IOError e) {
-                warning ("wingpanel-indicator-airpods: can't connect to D-Bus to monitor system battery charge changes (%s)", e.message);
-            }
-
-            batt_charge_mon.properties_changed.connect((inter, cp) => {
-                if (inter == "org.freedesktop.UPower.Device" && cp.get ("Percentage") != null) {
-                    debug ("wingpanel-indicator-airpods: system battery charge changed. System battery charge remaining %s%%", cp.get ("Percentage").get_double ().to_string ());
-                    settings.set_double ("system-battery-percentage", cp.get ("Percentage").get_double ());
+            // If the system has a battery
+            if (has_battery) {
+                // Check current system power source
+                debug ("wingpanel-indicator-airpods: connecting to D-Bus to check current system power source");
+                try {
+                    WingpanelAirPods.UPower system_upower_get_on_batt = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.UPower", "/org/freedesktop/UPower");
+                    bool on_batt = system_upower_get_on_batt.on_battery;
+                    if (on_batt) {
+                        debug ("wingpanel-indicator-airpods: system is running on battery");
+                        settings.set_boolean ("system-on-battery", true);
+                    } else {
+                        debug ("wingpanel-indicator-airpods: system is not running on battery");
+                        settings.set_boolean ("system-on-battery", false);
+                    }
+                } catch (IOError e) {
+                    warning ("wingpanel-indicator-airpods: can't connect to D-Bus to check current system power source (%s)", e.message);
                 }
-            });
+
+                // Monitor system power source changes
+                debug ("wingpanel-indicator-airpods: connecting to D-Bus to monitor system power source changes");
+                try {
+                    on_batt_mon = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.DBus.Properties", "/org/freedesktop/UPower");
+                } catch (IOError e) {
+                    warning ("wingpanel-indicator-airpods: can't connect to D-Bus to monitor system power source changes (%s)", e.message);
+                }
+
+                on_batt_mon.properties_changed.connect((inter, cp) => {
+                    if (inter == "org.freedesktop.UPower" && cp.get ("OnBattery") != null) {
+                        debug ("wingpanel-indicator-airpods: system power source changed. Running on battery (%s)", cp.get ("OnBattery").get_boolean ().to_string ());
+                        settings.set_boolean ("system-on-battery", cp.get ("OnBattery").get_boolean ());
+                    }
+                });
+
+                // Monitor system battery charge changes
+                debug ("wingpanel-indicator-airpods: connecting to D-Bus to monitor system battery charge changes");
+                try {
+                    batt_charge_mon = Bus.get_proxy_sync (BusType.SYSTEM, "org.freedesktop.DBus.Properties", batt_dev);
+                } catch (IOError e) {
+                    warning ("wingpanel-indicator-airpods: can't connect to D-Bus to monitor system battery charge changes (%s)", e.message);
+                }
+
+                batt_charge_mon.properties_changed.connect((inter, cp) => {
+                    if (inter == "org.freedesktop.UPower.Device" && cp.get ("Percentage") != null) {
+                        debug ("wingpanel-indicator-airpods: system battery charge changed. System battery charge remaining %s%%", cp.get ("Percentage").get_double ().to_string ());
+                        settings.set_double ("system-battery-percentage", cp.get ("Percentage").get_double ());
+                    }
+                });
+            } else {
+                settings.set_boolean ("system-on-battery", false);
+            }
 
             engage_battery_saver_mode ("indicator startup");
 

@@ -21,13 +21,27 @@
 
 [DBus (name = "org.freedesktop.UPower")]
 public interface WingpanelAirPods.UPower : Object {
+    public abstract ObjectPath[] enumerate_devices() throws Error;
     public abstract bool on_battery { get; }
 }
 
+[CCode (type_signature = "u")]
+public enum DeviceType {
+    UNKNOWN = 0,
+    LINE_POWER = 1,
+    BATTERY = 2,
+    UPS = 3,
+    MONITOR = 4,
+    MOUSE = 5,
+    KEYBOARD = 6,
+    PDA = 7,
+    PHONE = 8;
+}
 [DBus (name = "org.freedesktop.UPower.Device")]
 public interface WingpanelAirPods.UPowerDevice : Object {
     public abstract double energy { get; }
     public abstract double energy_empty { get; }
     public abstract double energy_full { get; }
     public abstract double percentage { get; }
+    public abstract DeviceType device_type { get; }
 }
