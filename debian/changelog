@@ -3,7 +3,7 @@ wingpanel-indicator-airpods (0.4.0) bionic; urgency=medium
    * Updated README file
    * Project main branch renamed to master
 
-  -- Fernando Casas Schössow <casasfernando@outlook.com>  Tue, 22 Jun 2021 00:05:00 +0200
+ -- Fernando Casas Schössow <casasfernando@outlook.com>  Tue, 22 Jun 2021 00:05:00 +0200
 
 
 wingpanel-indicator-airpods (0.3.5) bionic; urgency=medium
