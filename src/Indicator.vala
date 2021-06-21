@@ -39,9 +39,7 @@ namespace WingpanelAirPods {
 
         public Indicator (Wingpanel.IndicatorManager.ServerType server_type) {
             Object (
-                code_name: APPNAME,
-                display_name: "Wingpanel AirPods",
-                description: "AirPods indicator for Wingpanel"
+                code_name: APPNAME
                 );
         }
 

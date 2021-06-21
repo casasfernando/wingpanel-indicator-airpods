@@ -36,7 +36,7 @@ namespace WingpanelAirPods {
         private Gtk.Label batt_saver_warn_label;
         private Gtk.Separator batt_saver_warn_separator;
 
-        private Wingpanel.Widgets.Switch indicator_battery;
+        private Granite.SwitchModelButton indicator_battery;
 
         public unowned Settings settings { get; construct set; }
 
@@ -111,8 +111,9 @@ namespace WingpanelAirPods {
             batt_saver_warn.attach (batt_saver_warn_label, 1, 0, 1, 1);
 
             // Enable indicator battery information switch
-            indicator_battery = new Wingpanel.Widgets.Switch ("Show Percentage", settings.get_boolean ("display-indicator-battery"));
-            settings.bind ("display-indicator-battery", indicator_battery.get_switch (), "active", SettingsBindFlags.DEFAULT);
+            indicator_battery = new Granite.SwitchModelButton ("Show Percentage");
+            indicator_battery.set_active (settings.get_boolean ("display-indicator-battery"));
+            settings.bind ("display-indicator-battery", indicator_battery, "active", SettingsBindFlags.DEFAULT);
 
             var settings_button = new Gtk.ModelButton ();
             settings_button.text = _ ("Open Settings...");

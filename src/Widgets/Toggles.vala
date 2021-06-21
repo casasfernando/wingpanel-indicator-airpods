@@ -21,9 +21,9 @@
 
 namespace WingpanelAirPods {
     public class TogglesWidget : Gtk.Grid {
-        private Wingpanel.Widgets.Switch indicator;
-        private Wingpanel.Widgets.Switch indicator_connected_only;
-        private Wingpanel.Widgets.Switch indicator_notifications;
+        private Granite.SwitchModelButton indicator;
+        private Granite.SwitchModelButton indicator_connected_only;
+        private Granite.SwitchModelButton indicator_notifications;
         private ComboRow battery_saver_mode;
         private SpinRow battery_saver_mode_threshold_spin;
 
@@ -35,18 +35,22 @@ namespace WingpanelAirPods {
 
         construct {
             orientation = Gtk.Orientation.VERTICAL;
+            row_spacing = 6;
 
             // Enable indicator switch
-            indicator = new Wingpanel.Widgets.Switch ("Show indicator", settings.get_boolean ("display-indicator"));
-            settings.bind ("display-indicator", indicator.get_switch (), "active", SettingsBindFlags.DEFAULT);
+            indicator = new Granite.SwitchModelButton ("Show indicator");
+            indicator.set_active (settings.get_boolean ("display-indicator"));
+            settings.bind ("display-indicator", indicator, "active", SettingsBindFlags.DEFAULT);
 
             // Enable indicator only when the AirPods are connected switch
-            indicator_connected_only = new Wingpanel.Widgets.Switch ("Show indicator only when AirPods are connected", settings.get_boolean ("display-indicator-connected-only"));
-            settings.bind ("display-indicator-connected-only", indicator_connected_only.get_switch (), "active", SettingsBindFlags.DEFAULT);
+            indicator_connected_only = new Granite.SwitchModelButton ("Show indicator only when AirPods are connected");
+            indicator_connected_only.set_active (settings.get_boolean ("display-indicator-connected-only"));
+            settings.bind ("display-indicator-connected-only", indicator_connected_only, "active", SettingsBindFlags.DEFAULT);
 
             // Enable notifications
-            indicator_notifications = new Wingpanel.Widgets.Switch ("Show notifications", settings.get_boolean ("display-notifications"));
-            settings.bind ("display-notifications", indicator_notifications.get_switch (), "active", SettingsBindFlags.DEFAULT);
+            indicator_notifications = new Granite.SwitchModelButton ("Show notifications");
+            indicator_notifications.set_active (settings.get_boolean ("display-notifications"));
+            settings.bind ("display-notifications", indicator_notifications, "active", SettingsBindFlags.DEFAULT);
 
             // Enable battery saver mode
             string[] battery_saver_mode_val = { "Never", "On Threshold", "Always" };
