@@ -197,7 +197,7 @@ namespace WingpanelAirPods {
         }
 
         public void update_batt_warn_visibility () {
-            if ((settings.get_int ("battery-saver-mode") > 0) && settings.get_boolean ("system-on-battery")) {
+            if (settings.get_boolean ("battery-saver-mode-engaged")) {
                 set_widget_visible (batt_saver_warn, true);
                 set_widget_visible (batt_saver_warn_separator, true);
             } else {
