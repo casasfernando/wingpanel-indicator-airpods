@@ -23,6 +23,7 @@ namespace WingpanelAirPods {
     public class PopoverWidgetRowIconic : Gtk.Grid {
         private Gtk.Image batt_icon;
         private Gtk.Image icon;
+        private Gtk.Overlay overlay;
         private Gtk.Label text_label;
         private Gtk.Label value_label;
 
@@ -54,13 +55,18 @@ namespace WingpanelAirPods {
             margin_bottom = 6;
             column_spacing = 3;
 
-            batt_icon = new Gtk.Image.from_icon_name (batt_icn, Gtk.IconSize.DIALOG);
-            batt_icon.pixel_size = 48;
-            batt_icon.margin_end = 3;
+            icon = new Gtk.Image.from_icon_name (icn, Gtk.IconSize.DND);
+            icon.pixel_size = 32;
 
-            icon = new Gtk.Image.from_icon_name (icn, Gtk.IconSize.DIALOG);
-            icon.pixel_size = 48;
-            icon.margin_end = 3;
+            batt_icon = new Gtk.Image.from_icon_name (batt_icn, Gtk.IconSize.BUTTON);
+            batt_icon.pixel_size = 16;
+            batt_icon.halign = Gtk.Align.END;
+            batt_icon.valign = Gtk.Align.END;
+
+            overlay = new Gtk.Overlay ();
+            overlay.margin_end = 3;
+            overlay.add (icon);
+            overlay.add_overlay (batt_icon);
 
             text_label = new Gtk.Label (text);
             text_label.halign = Gtk.Align.START;
@@ -76,13 +82,11 @@ namespace WingpanelAirPods {
             value_label.margin_end = 9;
 
             // Add battery status icon
-            attach (batt_icon, 0, 0, 1, 2);
-            // Add element icon
-            attach (icon, 1, 0, 1, 2);
+            attach (overlay, 0, 0, 1, 2);
             // Add text label
-            attach (text_label, 2, 0);
+            attach (text_label, 1, 0);
             // Add value label
-            attach (value_label, 2, 1);
+            attach (value_label, 1, 1);
 
         }
 
