@@ -1,3 +1,10 @@
+wingpanel-indicator-airpods (0.4.2) focal; urgency=medium
+
+  * Fixed the device icon size in the popover menu when the AirPods are not connected
+
+ -- Fernando Casas Schössow <casasfernando@outlook.com>  Tue, 07 Sep 2021 23:05:00 +0200
+
+
 wingpanel-indicator-airpods (0.4.1) focal; urgency=medium
 
   * Changed battery level text expression
