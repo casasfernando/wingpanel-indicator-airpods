@@ -69,7 +69,8 @@ namespace WingpanelAirPods {
             airpods_disconnected_text_label.valign = Gtk.Align.END;
             airpods_disconnected_text_label.hexpand = true;
             airpods_disconnected_text_label.margin_start = 9;
-            airpods_disconnected_text_label.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
+            airpods_disconnected_text_label.use_markup = true;
+            airpods_disconnected_text_label.set_markup("<b>AirPods</b>");
 
             airpods_disconnected_value_label = new Gtk.Label ("Not Connected");
             airpods_disconnected_value_label.halign = Gtk.Align.START;
