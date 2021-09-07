@@ -73,7 +73,8 @@ namespace WingpanelAirPods {
             text_label.valign = Gtk.Align.END;
             text_label.hexpand = true;
             text_label.margin_start = 9;
-            text_label.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
+            text_label.use_markup = true;
+            text_label.set_markup("<b>" + text + "</b>");
 
             value_label = new Gtk.Label (val);
             value_label.halign = Gtk.Align.START;
