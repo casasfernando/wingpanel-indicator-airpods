@@ -410,7 +410,7 @@ namespace WingpanelAirPods {
 
                 batt_charge_mon.properties_changed.connect((inter, cp) => {
                     if (inter == "org.freedesktop.UPower.Device" && cp.get ("Percentage") != null) {
-                        debug ("wingpanel-indicator-airpods: system battery charge changed. System battery charge remaining %s%%", cp.get ("Percentage").get_double ().to_string ());
+                        debug ("wingpanel-indicator-airpods: system battery charge changed. System battery %s%% charged", cp.get ("Percentage").get_double ().to_string ());
                         settings.set_double ("system-battery-percentage", cp.get ("Percentage").get_double ());
                     }
                 });
@@ -562,7 +562,7 @@ namespace WingpanelAirPods {
         private string batt_val (int64 batt_lvl) {
             string batt_value = "";
             if (batt_lvl != 15) {
-                batt_value = (batt_lvl * 10).to_string ().concat ("% remaining");
+                batt_value = (batt_lvl * 10).to_string ().concat ("% charged");
             } else {
                 batt_value = "Not Connected";
             }
