@@ -60,8 +60,8 @@ namespace WingpanelAirPods {
             airpods_disconnected.margin_bottom = 6;
             airpods_disconnected.column_spacing = 3;
 
-            airpods_disconnected_icon = new Gtk.Image.from_icon_name ("airpods-symbolic", Gtk.IconSize.DIALOG);
-            airpods_disconnected_icon.pixel_size = 48;
+            airpods_disconnected_icon = new Gtk.Image.from_icon_name ("airpods-symbolic", Gtk.IconSize.DND);
+            airpods_disconnected_icon.pixel_size = 32;
             airpods_disconnected_icon.margin_end = 3;
 
             airpods_disconnected_text_label = new Gtk.Label ("AirPods");
