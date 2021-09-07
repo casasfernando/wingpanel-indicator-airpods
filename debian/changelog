@@ -1,3 +1,10 @@
+wingpanel-indicator-airpods (0.4.3) focal; urgency=medium
+
+  * Fixed a bug related to battery saver mode warning display in popover menu introduced in commit 3fec538
+
+ -- Fernando Casas Schössow <casasfernando@outlook.com>  Tue, 07 Sep 2021 23:55:00 +0200
+
+
 wingpanel-indicator-airpods (0.4.2) focal; urgency=medium
 
   * Fixed the device icon size in the popover menu when the AirPods are not connected
