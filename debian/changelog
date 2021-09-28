@@ -1,3 +1,10 @@
+wingpanel-indicator-airpods (0.4.4) bionic; urgency=medium
+
+  * Changed device icon size in overlays to match stock elementary OS indicators
+
+ -- Fernando Casas Schössow <casasfernando@outlook.com>  Wed, 29 Sep 2021 00:05:00 +0200
+
+
 wingpanel-indicator-airpods (0.4.3) bionic; urgency=medium
 
   * Fixed a bug related to battery saver mode warning display in popover menu introduced in commit 3fec538
