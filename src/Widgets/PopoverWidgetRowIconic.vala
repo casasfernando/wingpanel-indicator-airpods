@@ -55,11 +55,11 @@ namespace WingpanelAirPods {
             margin_bottom = 6;
             column_spacing = 3;
 
-            icon = new Gtk.Image.from_icon_name (icn, Gtk.IconSize.DND);
-            icon.pixel_size = 32;
+            icon = new Gtk.Image.from_icon_name (icn, Gtk.IconSize.DIALOG);
+            icon.pixel_size = 48;
 
-            batt_icon = new Gtk.Image.from_icon_name (batt_icn, Gtk.IconSize.BUTTON);
-            batt_icon.pixel_size = 16;
+            batt_icon = new Gtk.Image.from_icon_name (batt_icn, Gtk.IconSize.LARGE_TOOLBAR);
+            batt_icon.pixel_size = 24;
             batt_icon.halign = Gtk.Align.END;
             batt_icon.valign = Gtk.Align.END;
 
