@@ -1,3 +1,12 @@
+wingpanel-indicator-airpods (0.4.5) bionic; urgency=medium
+
+  * Fixed the application opening a new settings window every time Open Settings is clicked
+  * Added additional keyboard shortcut to close the settings window: CTRL+q
+
+
+ -- Fernando Casas Schössow <casasfernando@outlook.com>  Sat, 16 Oct 2021 22:05:00 +0200
+
+
 wingpanel-indicator-airpods (0.4.4) bionic; urgency=medium
 
   * Changed device icon size in overlays to match stock elementary OS indicators
