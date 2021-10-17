@@ -54,11 +54,12 @@ You'll need the following dependencies:
 
 ```
 libglib2.0-dev
+libnotify-dev
 libgranite-dev
 libgtk-3-dev
 libwingpanel-2.0-dev (Hera)
 libwingpanel-dev (Odin)
-libnotify-dev
+libhandy-1-dev (Odin)
 meson
 valac
 ```
@@ -66,13 +67,13 @@ valac
 You can install them in **elementary OS Hera** running:
 
 ```
-sudo apt install libgranite-dev libgtk-3-dev libwingpanel-2.0-dev meson valac libnotify-dev
+sudo apt install libnotify-dev libgranite-dev libgtk-3-dev libwingpanel-2.0-dev meson valac
 ```
 
 Or in **elementary OS Odin** running:
 
 ```
-sudo apt install libgranite-dev libgtk-3-dev libwingpanel-dev meson valac libnotify-dev
+sudo apt install libnotify-dev libgranite-dev libgtk-3-dev libwingpanel-dev libhandy-1-dev meson valac
 ```
 
 Run `meson` to configure the build environment and then `ninja` to build

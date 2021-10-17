@@ -48,6 +48,7 @@ executable(
         dependency('gobject-2.0'),
         dependency('granite'),
         dependency('gtk+-3.0'),
+        dependency('libhandy-1'),
         wingpanel,
         meson.get_compiler('c').find_library('m', required : false),
         meson.get_compiler('vala').find_library('posix')
@@ -73,9 +74,9 @@ shared_module(
         dependency('gee-0.8'),
         dependency('glib-2.0'),
         dependency('gobject-2.0'),
+        dependency('libnotify'),
         dependency('granite'),
         dependency('gtk+-3.0'),
-        dependency('libnotify'),
         wingpanel,
     ],
     install: true,

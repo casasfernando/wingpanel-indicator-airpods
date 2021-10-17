@@ -20,43 +20,46 @@
  */
 
 namespace WingpanelAirPods {
-    public class MainWindow : Gtk.Window {
+    public class MainWindow : Hdy.ApplicationWindow {
         private GLib.Settings settings;
 
         public MainWindow (Gtk.Application application) {
             Object (
                 application: application,
-                border_width: 1,
                 icon_name: "com.github.casasfernando.wingpanel-indicator-airpods",
-                resizable: false, title: "Wingpanel AirPods",
+                resizable: false,
+                title: "Wingpanel AirPods",
                 window_position: Gtk.WindowPosition.CENTER,
                 default_width: 300
                 );
         }
 
         construct {
-
+            Hdy.init ();
             settings = new GLib.Settings ("com.github.casasfernando.wingpanel-indicator-airpods");
             var toggles = new TogglesWidget (settings);
 
-            var layout = new Gtk.Grid ();
-            layout.hexpand = true;
-            layout.margin = 10;
-            layout.column_spacing = 6;
-            layout.row_spacing = 10;
+            var container = new Gtk.Grid ();
 
-            layout.attach (toggles, 0, 1, 1, 1);
-
-            var header = new Gtk.HeaderBar ();
+            var header = new Hdy.HeaderBar ();
             header.show_close_button = true;
-
+            header.title = "Wingpanel AirPods";
             var header_context = header.get_style_context ();
             header_context.add_class ("titlebar");
             header_context.add_class ("default-decoration");
             header_context.add_class (Gtk.STYLE_CLASS_FLAT);
 
-            set_titlebar (header);
-            add (layout);
+            var body = new Gtk.Grid ();
+            body.hexpand = true;
+            body.margin = 10;
+            body.column_spacing = 6;
+            body.row_spacing = 10;
+            body.attach (toggles, 0, 0);
+
+            container.attach (header, 0, 0);
+            container.attach (body, 0, 1);
+
+            add (container);
 
         }
 
