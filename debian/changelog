@@ -1,3 +1,12 @@
+wingpanel-indicator-airpods (0.4.6) focal; urgency=medium
+
+  * Updated README file
+  * Use libhandy for the settings window
+
+
+ -- Fernando Casas Schössow <casasfernando@outlook.com>  Mon, 18 Oct 2021 01:00:00 +0200
+
+
 wingpanel-indicator-airpods (0.4.5) focal; urgency=medium
 
   * Fixed the application opening a new settings window every time Open Settings is clicked
