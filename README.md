@@ -53,10 +53,10 @@ You'll need the following dependencies:
 
 ```
 libglib2.0-dev
+libnotify-dev
 libgranite-dev
 libgtk-3-dev
 libwingpanel-2.0-dev
-libnotify-dev
 meson
 valac
 ```
@@ -64,7 +64,7 @@ valac
 You can install them running:
 
 ```
-sudo apt install libgranite-dev libgtk-3-dev libwingpanel-2.0-dev meson valac libnotify-dev
+sudo apt install libnotify-dev libgranite-dev libgtk-3-dev libwingpanel-2.0-dev meson valac
 ```
 
 Run `meson` to configure the build environment and then `ninja` to build
