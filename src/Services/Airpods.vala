@@ -314,7 +314,7 @@ namespace WingpanelAirPods {
         public static async void airpods_wait_timeout (uint seconds) {
             Timeout.add_seconds (seconds, () => {
                 airpods_wait_timeout.callback ();
-                return false;
+                return GLib.Source.REMOVE;
             });
             yield;
         }

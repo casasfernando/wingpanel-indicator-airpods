@@ -112,7 +112,7 @@ namespace WingpanelAirPods {
                 Timeout.add_seconds (1, () => {
                     display_widget.update_airpods ();
                     update_popover_widget_data ();
-                    return true;
+                    return GLib.Source.CONTINUE;
                 });
             }
         }
@@ -457,7 +457,7 @@ namespace WingpanelAirPods {
                 debug ("wingpanel-indicator-airpods: starting automatic AirPods beacon discovery every 60 seconds (battery saver mode: on)");
                 airpods_beacon_discovery_timeout = Timeout.add_seconds (60, () => {
                     AirPodsService.airpods_beacon_discovery_start.begin ();
-                    return true;
+                    return GLib.Source.CONTINUE;
                 });
                 AirPodsService.airpods_beacon_discovery_start.begin ();
                 airpods_notify ("Battery saver mode engaged", "In order to preserve system battery life some indicator features (e.g. media player playback control using AirPods in-ear detection) will be disabled and AirPods battery level report may be less accurate.");
