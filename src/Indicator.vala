@@ -134,7 +134,7 @@ namespace WingpanelAirPods {
                 popover_widget.update_left_pod_visibility ();
                 int64 status_batt_l = settings.get_int64 ("airpods-status-batt-l");
                 if (status_batt_l != prev_status_batt_l && status_batt_l < 3) {
-                    airpods_batt_level_notify ("Left AirPod", status_batt_l);
+                    airpods_batt_level_notify (_("Left AirPod"), status_batt_l);
                 }
                 prev_status_batt_l = status_batt_l;
             });
@@ -143,7 +143,7 @@ namespace WingpanelAirPods {
                 popover_widget.update_right_pod_visibility ();
                 int64 status_batt_r = settings.get_int64 ("airpods-status-batt-r");
                 if (status_batt_r != prev_status_batt_r && status_batt_r < 3) {
-                    airpods_batt_level_notify ("Right AirPod", status_batt_r);
+                    airpods_batt_level_notify (_("Right AirPod"), status_batt_r);
                 }
                 prev_status_batt_r = status_batt_r;
             });
@@ -152,7 +152,7 @@ namespace WingpanelAirPods {
                 popover_widget.update_pods_case_visibility ();
                 int64 status_batt_case = settings.get_int64 ("airpods-status-batt-case");
                 if (status_batt_case != prev_status_batt_case && status_batt_case < 3) {
-                    airpods_batt_level_notify ("AirPods case", status_batt_case);
+                    airpods_batt_level_notify (_("AirPods case"), status_batt_case);
                 }
                 prev_status_batt_case = status_batt_case;
             });
@@ -460,7 +460,7 @@ namespace WingpanelAirPods {
                     return GLib.Source.CONTINUE;
                 });
                 AirPodsService.airpods_beacon_discovery_start.begin ();
-                airpods_notify ("Battery saver mode engaged", "In order to preserve system battery life some indicator features (e.g. media player playback control using AirPods in-ear detection) will be disabled and AirPods battery level report may be less accurate.");
+                airpods_notify (_("Battery saver mode engaged"), _("In order to preserve system battery life some indicator features (e.g. media player playback control using AirPods in-ear detection) will be disabled and AirPods battery level report may be less accurate."));
             } else {
                 // Remove the time to automatically discover AirPods beacon every 60 seconds if present
                 if (airpods_beacon_discovery_timeout != 0) {
@@ -470,7 +470,7 @@ namespace WingpanelAirPods {
                 debug ("wingpanel-indicator-airpods: starting automatic AirPods beacon discovery (battery saver mode: off)");
                 AirPodsService.airpods_beacon_discovery_start.begin ();
                 if (reason != "AirPods connected") {
-                    airpods_notify ("Battery saver mode disengaged", "Re-enabling all indicator features");
+                    airpods_notify (_("Battery saver mode disengaged"), _("Re-enabling all indicator features"));
                 }
             }
         }
@@ -564,9 +564,9 @@ namespace WingpanelAirPods {
         private string batt_val (int64 batt_lvl) {
             string batt_value = "";
             if (batt_lvl != 15) {
-                batt_value = (batt_lvl * 10).to_string ().concat ("% charged");
+                batt_value = (batt_lvl * 10).to_string ().concat (_("% charged"));
             } else {
-                batt_value = "Not Connected";
+                batt_value = _("Not Connected");
             }
             return batt_value;
         }
@@ -574,11 +574,11 @@ namespace WingpanelAirPods {
         private void airpods_batt_level_notify (string element, int64 blvl) {
             string nbody = "";
             if (blvl < 1) {
-                nbody = element.concat (" battery level is critical and it needs to be recharged immediately");
+                nbody = element.concat (_(" battery level is critical and it needs to be recharged immediately"));
             } else {
-                nbody = element.concat (" battery level is low and it will need to be recharged soon.");
+                nbody = element.concat (_(" battery level is low and it will need to be recharged soon."));
             }
-            airpods_notify ("Battery level alert", nbody);
+            airpods_notify (_("Battery level alert"), nbody);
             return;
         }
 
