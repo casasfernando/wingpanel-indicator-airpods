@@ -38,29 +38,29 @@ namespace WingpanelAirPods {
             row_spacing = 6;
 
             // Enable indicator switch
-            indicator = new Granite.SwitchModelButton ("Show indicator");
+            indicator = new Granite.SwitchModelButton (_("Show indicator"));
             indicator.set_active (settings.get_boolean ("display-indicator"));
             settings.bind ("display-indicator", indicator, "active", SettingsBindFlags.DEFAULT);
 
             // Enable indicator only when the AirPods are connected switch
-            indicator_connected_only = new Granite.SwitchModelButton ("Show indicator only when AirPods are connected");
+            indicator_connected_only = new Granite.SwitchModelButton (_("Show indicator only when AirPods are connected"));
             indicator_connected_only.set_active (settings.get_boolean ("display-indicator-connected-only"));
             settings.bind ("display-indicator-connected-only", indicator_connected_only, "active", SettingsBindFlags.DEFAULT);
 
             // Enable notifications
-            indicator_notifications = new Granite.SwitchModelButton ("Show notifications");
+            indicator_notifications = new Granite.SwitchModelButton (_("Show notifications"));
             indicator_notifications.set_active (settings.get_boolean ("display-notifications"));
             settings.bind ("display-notifications", indicator_notifications, "active", SettingsBindFlags.DEFAULT);
 
             // Enable battery saver mode
-            string[] battery_saver_mode_val = { "Never", "On Threshold", "Always" };
-            battery_saver_mode = new ComboRow ("Enable battery saver mode", battery_saver_mode_val, settings.get_int ("battery-saver-mode"));
+            string[] battery_saver_mode_val = { _("Never"), _("On Threshold"), _("Always") };
+            battery_saver_mode = new ComboRow (_("Enable battery saver mode"), battery_saver_mode_val, settings.get_int ("battery-saver-mode"));
             battery_saver_mode.changed.connect( () => {
                 settings.set_int ("battery-saver-mode", battery_saver_mode.get_combo_value ());
             });
 
             // Battery charge threshold
-            battery_saver_mode_threshold_spin = new SpinRow ("Battery saver mode threshold (%)", 10, 99);
+            battery_saver_mode_threshold_spin = new SpinRow (_("Battery saver mode threshold (%)"), 10, 99);
             battery_saver_mode_threshold_spin.set_spin_value (settings.get_int ("battery-saver-mode-threshold"));
             battery_saver_mode_threshold_spin.changed.connect ( () => {
                 settings.set_int ("battery-saver-mode-threshold", battery_saver_mode_threshold_spin.get_spin_value ());

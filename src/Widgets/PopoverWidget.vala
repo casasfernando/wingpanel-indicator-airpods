@@ -48,9 +48,9 @@ namespace WingpanelAirPods {
             orientation = Gtk.Orientation.VERTICAL;
             column_spacing = 4;
 
-            left_pod = new PopoverWidgetRowIconic ("battery-missing", "airpods-left-symbolic", "Left AirPod", "Not Connected");
-            right_pod = new PopoverWidgetRowIconic ("battery-missing", "airpods-right-symbolic", "Right AirPod", "Not Connected");
-            pods_case = new PopoverWidgetRowIconic ("battery-missing", "airpods-case-symbolic", "AirPods Case", "Not Connected");
+            left_pod = new PopoverWidgetRowIconic ("battery-missing", "airpods-left-symbolic", _("Left AirPod"), _("Not Connected"));
+            right_pod = new PopoverWidgetRowIconic ("battery-missing", "airpods-right-symbolic", _("Right AirPod"), _("Not Connected"));
+            pods_case = new PopoverWidgetRowIconic ("battery-missing", "airpods-case-symbolic", _("AirPods Case"), _("Not Connected"));
 
             airpods_disconnected = new Gtk.Grid ();
             airpods_disconnected.hexpand = true;
@@ -72,7 +72,7 @@ namespace WingpanelAirPods {
             airpods_disconnected_text_label.use_markup = true;
             airpods_disconnected_text_label.set_markup("<b>AirPods</b>");
 
-            airpods_disconnected_value_label = new Gtk.Label ("Not Connected");
+            airpods_disconnected_value_label = new Gtk.Label (_("Not Connected"));
             airpods_disconnected_value_label.halign = Gtk.Align.START;
             airpods_disconnected_value_label.valign = Gtk.Align.START;
             airpods_disconnected_value_label.margin_start = 9;
@@ -93,13 +93,13 @@ namespace WingpanelAirPods {
             batt_saver_warn.margin_end = 12;
             batt_saver_warn.margin_bottom = 6;
             batt_saver_warn.column_spacing = 3;
-            batt_saver_warn.set_tooltip_text ("In order to preserve system battery life some indicator features are disabled and AirPods battery level report may be less accurate.");
+            batt_saver_warn.set_tooltip_text (_("In order to preserve system battery life some indicator features are disabled and AirPods battery level report may be less accurate."));
 
             batt_saver_warn_icon = new Gtk.Image.from_icon_name ("dialog-warning-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
             batt_saver_warn_icon.pixel_size = 16;
             batt_saver_warn_icon.margin_end = 3;
 
-            batt_saver_warn_label = new Gtk.Label ("Battery saver mode engaged");
+            batt_saver_warn_label = new Gtk.Label (_("Battery saver mode engaged"));
             batt_saver_warn_label.halign = Gtk.Align.START;
             batt_saver_warn_label.hexpand = true;
             batt_saver_warn_label.margin_start = 3;
@@ -112,12 +112,12 @@ namespace WingpanelAirPods {
             batt_saver_warn.attach (batt_saver_warn_label, 1, 0, 1, 1);
 
             // Enable indicator battery information switch
-            indicator_battery = new Granite.SwitchModelButton ("Show Percentage");
+            indicator_battery = new Granite.SwitchModelButton (_("Show Percentage"));
             indicator_battery.set_active (settings.get_boolean ("display-indicator-battery"));
             settings.bind ("display-indicator-battery", indicator_battery, "active", SettingsBindFlags.DEFAULT);
 
             var settings_button = new Gtk.ModelButton ();
-            settings_button.text = _ ("Open Settings...");
+            settings_button.text = _("Open Settings...");
             /*
             var settings_button = new Gtk.Button.from_icon_name ("preferences-system-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
             settings_button.always_show_image = true;

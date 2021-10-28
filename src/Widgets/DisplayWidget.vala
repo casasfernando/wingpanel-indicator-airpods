@@ -59,7 +59,7 @@ namespace WingpanelAirPods {
             } else if (airpod_batt_r != 15) {
                 airpods_info.label_value = (airpod_batt_r * 10).to_string ().concat ("%");
             } else {
-                airpods_info.label_value = "N/A";
+                airpods_info.label_value = _("N/A");
             }
 
             // Show battery percentage in the indicator only if the AirPods are connected
