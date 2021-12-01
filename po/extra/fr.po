@@ -1,15 +1,15 @@
 # French translations for extra package.
 # Copyright (C) 2021 THE extra'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the extra package.
-# Automatically generated, 2021.
+# Nathan Bonnemains (@NathanBnm), 2021.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-28 19:12+0200\n"
+"POT-Creation-Date: 2021-12-01 23:21+0100\n"
 "PO-Revision-Date: 2021-10-28 19:11+0200\n"
-"Last-Translator: Automatically generated\n"
+"Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: none\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -21,29 +21,31 @@ msgstr ""
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.desktop.in:3
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.desktop.in:4
 msgid "Wingpanel AirPods"
-msgstr ""
+msgstr "Indicateur Airpods"
 
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.appdata.xml.in:7
 msgid "AirPods status indicator for elementary OS Wingpanel"
-msgstr ""
+msgstr "Indicateur de statut des Airpods pour le panneau d'elementary OS"
 
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.appdata.xml.in:9
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.desktop.in:5
 msgid "Display Apple's AirPods status information in elementary OS Wingpanel"
 msgstr ""
+"Affiche les informations de statut des Apple AirPods dans le panneau "
+"d'elementary OS"
 
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.appdata.xml.in:40
 msgid "Fernando Casas Schössow"
-msgstr ""
+msgstr "Fernando Casas Schössow"
 
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.appdata.xml.in:49
 msgid "Initial release"
-msgstr ""
+msgstr "Version initiale"
 
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.desktop.in:8
 msgid "com.github.casasfernando.wingpanel-indicator-airpods"
-msgstr ""
+msgstr "com.github.casasfernando.wingpanel-indicator-airpods"
 
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.desktop.in:12
 msgid "Utility;"
-msgstr ""
+msgstr "Utilitaire;"
