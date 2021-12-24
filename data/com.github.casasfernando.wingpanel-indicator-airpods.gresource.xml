@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/github/casasfernando/wingpanel-indicator-airpods">
+    <file alias="Application.css">Application.css</file>
+    <file compressed="true" preprocess="xml-stripblanks">icons/airpods-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks">icons/airpods-left-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks">icons/airpods-right-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks">icons/airpods-case-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks">icons/airpods-connected-symbolic.svg</file>
+    <file compressed="true" preprocess="xml-stripblanks">icons/airpods-disconnected-symbolic.svg</file>
+  </gresource>
+</gresources>
