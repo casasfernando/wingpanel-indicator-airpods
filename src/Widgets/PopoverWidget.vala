@@ -116,11 +116,11 @@ namespace WingpanelAirPods {
             settings.bind ("display-indicator-battery", indicator_battery.get_switch (), "active", SettingsBindFlags.DEFAULT);
 
             var settings_button = new Gtk.ModelButton ();
-            settings_button.text = _("Open Settings...");
+            settings_button.text = _("Open Settings…");
             /*
             var settings_button = new Gtk.Button.from_icon_name ("preferences-system-symbolic", Gtk.IconSize.SMALL_TOOLBAR);
             settings_button.always_show_image = true;
-            settings_button.label = "Open Settings...";
+            settings_button.label = "Open Settings…";
             settings_button.relief = Gtk.ReliefStyle.NONE;
             */
             settings_button.clicked.connect (open_settings);
