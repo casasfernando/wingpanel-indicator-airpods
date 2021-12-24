@@ -564,7 +564,8 @@ namespace WingpanelAirPods {
         private string batt_val (int64 batt_lvl) {
             string batt_value = "";
             if (batt_lvl != 15) {
-                batt_value = (batt_lvl * 10).to_string ().concat (_("% charged"));
+                // TRANSLATORS: %s% stands for percentage value
+                batt_value = _("%s%% charged").printf ((batt_lvl * 10).to_string ());
             } else {
                 batt_value = _("Not Connected");
             }
@@ -574,9 +575,11 @@ namespace WingpanelAirPods {
         private void airpods_batt_level_notify (string element, int64 blvl) {
             string nbody = "";
             if (blvl < 1) {
-                nbody = element.concat (_(" battery level is critical and it needs to be recharged immediately"));
+                // TRANSLATORS: %s stands for AirPod name
+                nbody = _("%s battery level is critical and it needs to be recharged immediately.").printf (element);
             } else {
-                nbody = element.concat (_(" battery level is low and it will need to be recharged soon."));
+                // TRANSLATORS: %s stands for AirPod name
+                nbody = _("%s battery level is low and it will need to be recharged soon.").printf (element);
             }
             airpods_notify (_("Battery level alert"), nbody);
             return;
