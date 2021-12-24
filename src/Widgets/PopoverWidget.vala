@@ -50,7 +50,7 @@ namespace WingpanelAirPods {
 
             left_pod = new PopoverWidgetRowIconic ("battery-missing", "airpods-left-symbolic", _("Left AirPod"), _("Not Connected"));
             right_pod = new PopoverWidgetRowIconic ("battery-missing", "airpods-right-symbolic", _("Right AirPod"), _("Not Connected"));
-            pods_case = new PopoverWidgetRowIconic ("battery-missing", "airpods-case-symbolic", _("AirPods Case"), _("Not Connected"));
+            pods_case = new PopoverWidgetRowIconic ("battery-missing", "airpods-case-symbolic", _("AirPods case"), _("Not Connected"));
 
             airpods_disconnected = new Gtk.Grid ();
             airpods_disconnected.hexpand = true;

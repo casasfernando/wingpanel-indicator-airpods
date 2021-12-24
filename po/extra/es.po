@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: extra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-28 19:12+0200\n"
-"PO-Revision-Date: 2021-10-28 19:29+0200\n"
+"POT-Creation-Date: 2021-12-24 09:17+0100\n"
+"PO-Revision-Date: 2021-12-24 09:20+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -38,7 +38,7 @@ msgstr ""
 
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.appdata.xml.in:49
 msgid "Initial release"
-msgstr ""
+msgstr "Versión inicial"
 
 #: data/com.github.casasfernando.wingpanel-indicator-airpods.desktop.in:8
 msgid "com.github.casasfernando.wingpanel-indicator-airpods"
