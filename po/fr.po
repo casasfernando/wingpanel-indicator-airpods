@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: com.github.casasfernando.wingpanel-indicator-airpods\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-24 09:17+0100\n"
-"PO-Revision-Date: 2021-12-01 23:19+0100\n"
+"POT-Creation-Date: 2021-12-25 21:06+0100\n"
+"PO-Revision-Date: 2021-12-25 22:14+0100\n"
 "Last-Translator: Nathan Bonnemains (@NathanBnm)\n"
 "Language-Team: none\n"
 "Language: fr\n"
@@ -17,23 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/Indicator.vala:135 src/Widgets/PopoverWidget.vala:51
+#: src/Indicator.vala:137 src/Widgets/PopoverWidget.vala:51
 msgid "Left AirPod"
 msgstr "AirPod gauche"
 
-#: src/Indicator.vala:144 src/Widgets/PopoverWidget.vala:52
+#: src/Indicator.vala:146 src/Widgets/PopoverWidget.vala:52
 msgid "Right AirPod"
 msgstr "AirPod droit"
 
-#: src/Indicator.vala:153 src/Widgets/PopoverWidget.vala:53
+#: src/Indicator.vala:155 src/Widgets/PopoverWidget.vala:53
 msgid "AirPods case"
 msgstr "Boîtier des AirPods"
 
-#: src/Indicator.vala:461 src/Widgets/PopoverWidget.vala:102
+#: src/Indicator.vala:463 src/Widgets/PopoverWidget.vala:102
 msgid "Battery saver mode engaged"
 msgstr "Mode économie d'énergie activé"
 
-#: src/Indicator.vala:461
+#: src/Indicator.vala:463
 msgid ""
 "In order to preserve system battery life some indicator features (e.g. media "
 "player playback control using AirPods in-ear detection) will be disabled and "
@@ -44,28 +44,28 @@ msgstr ""
 "seront désactivées et l'affichage du niveau de batterie des AirPods peut "
 "être moins précis."
 
-#: src/Indicator.vala:471
+#: src/Indicator.vala:473
 msgid "Battery saver mode disengaged"
 msgstr "Mode économie d'énergie désactivé"
 
-#: src/Indicator.vala:471
+#: src/Indicator.vala:473
 msgid "Re-enabling all indicator features"
 msgstr "Réactive toutes les fonctionnalités de l'indicateur"
 
 #. TRANSLATORS: %s% stands for percentage value
-#: src/Indicator.vala:566
+#: src/Indicator.vala:568
 #, c-format
 msgid "%s%% charged"
 msgstr "Chargé à %s%%"
 
-#: src/Indicator.vala:568 src/Widgets/PopoverWidget.vala:51
+#: src/Indicator.vala:570 src/Widgets/PopoverWidget.vala:51
 #: src/Widgets/PopoverWidget.vala:52 src/Widgets/PopoverWidget.vala:53
 #: src/Widgets/PopoverWidget.vala:75
 msgid "Not Connected"
 msgstr "Non connecté"
 
 #. TRANSLATORS: %s stands for AirPod name
-#: src/Indicator.vala:577
+#: src/Indicator.vala:579
 #, c-format
 msgid "%s battery level is critical and it needs to be recharged immediately."
 msgstr ""
@@ -73,13 +73,13 @@ msgstr ""
 "immédiatement."
 
 #. TRANSLATORS: %s stands for AirPod name
-#: src/Indicator.vala:580
+#: src/Indicator.vala:582
 #, c-format
 msgid "%s battery level is low and it will need to be recharged soon."
 msgstr ""
 "Le niveau de batterie de %s est faible et il devra être rechargé rapidement."
 
-#: src/Indicator.vala:582
+#: src/Indicator.vala:584
 msgid "Battery level alert"
 msgstr "Alerte de niveau de batterie"
 
@@ -100,38 +100,38 @@ msgstr ""
 msgid "Show Percentage"
 msgstr "Afficher le pourcentage"
 
-#: src/Widgets/PopoverWidget.vala:120
+#: src/Widgets/PopoverWidget.vala:119
 msgid "Open Settings…"
 msgstr "Ouvrir les paramètres…"
 
-#: src/Widgets/Toggles.vala:41
+#: src/Widgets/Toggles.vala:40
 msgid "Show indicator"
 msgstr "Afficher l'indicateur"
 
-#: src/Widgets/Toggles.vala:46
+#: src/Widgets/Toggles.vala:44
 msgid "Show indicator only when AirPods are connected"
 msgstr "Afficher l'indicateur uniquement si les AirPods sont connectés"
 
-#: src/Widgets/Toggles.vala:51
+#: src/Widgets/Toggles.vala:48
 msgid "Show notifications"
 msgstr "Afficher les notifications"
 
-#: src/Widgets/Toggles.vala:56
+#: src/Widgets/Toggles.vala:52
 msgid "Never"
 msgstr "Jamais"
 
-#: src/Widgets/Toggles.vala:56
+#: src/Widgets/Toggles.vala:52
 msgid "On Threshold"
 msgstr "Avec limite"
 
-#: src/Widgets/Toggles.vala:56
+#: src/Widgets/Toggles.vala:52
 msgid "Always"
 msgstr "Toujours"
 
-#: src/Widgets/Toggles.vala:57
+#: src/Widgets/Toggles.vala:53
 msgid "Enable battery saver mode"
 msgstr "Activer le mode économie d'énergie"
 
-#: src/Widgets/Toggles.vala:63
+#: src/Widgets/Toggles.vala:59
 msgid "Battery saver mode threshold (%)"
 msgstr "Seuil d'activation du mode économie d'énergie (%)"
