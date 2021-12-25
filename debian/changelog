@@ -1,3 +1,15 @@
+wingpanel-indicator-airpods (0.4.7) focal; urgency=medium
+
+  * Updated README file
+  * Added support for translations
+  * Added spanish and french translation
+  * Improve meson build system
+  * Minor UI changes
+
+
+ -- Fernando Casas Schössow <casasfernando@outlook.com>  Sat, 25 Dec 2021 20:48:00 +0100
+
+
 wingpanel-indicator-airpods (0.4.6) focal; urgency=medium
 
   * Updated README file
