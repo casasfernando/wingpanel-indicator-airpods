@@ -28,7 +28,7 @@ namespace WingpanelAirPods {
                 application: application,
                 icon_name: "com.github.casasfernando.wingpanel-indicator-airpods",
                 resizable: false,
-                title: "Wingpanel AirPods",
+                title: "AirPods",
                 window_position: Gtk.WindowPosition.CENTER,
                 default_width: 300
                 );
