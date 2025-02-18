@@ -3,6 +3,11 @@
 </p>
 <h1 align="center">Wingpanel AirPods</h1>
 
+## Archive notice
+
+I just found that the indicator is broken since elementary OS 7 (Horus) most likely due to a change in Bluez API/DBus/Vala interface.
+Since I don't really have motivation (or free time) to fix it and update the indicator for recent elementary OS versions, it's time for me to let it go and archive the project.
+
 ## About
 
 Wingpanel AirPods is a status indicator that displays Apple's AirPods status information in elementary OS Wingpanel.
